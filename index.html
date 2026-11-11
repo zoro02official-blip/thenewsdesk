@@ -1160,32 +1160,20 @@ async function apiFetch(url, opts={}) {
 // ═══════════════════════════════════════════
 // LOAD ARTICLES
 // ═══════════════════════════════════════════
-const DEMO_ARTICLES = [
-  {id:1,title:"Federal Reserve Signals Pause on Rate Hikes Amid Cooling Inflation",exc:"Policymakers cite easing price pressures and a resilient labour market as reasons to hold rates steady through early next year.",body:"<p>The Federal Reserve indicated Wednesday it will likely hold interest rates steady through the first quarter, as inflation continues its gradual retreat toward the central bank's 2 percent target. Chair Jerome Powell told reporters after the two-day policy meeting that officials wanted more evidence before making additional adjustments.</p><p>Consumer prices rose 2.6 percent year-over-year in October, down from a peak above 9 percent in mid-2022. Core inflation, which strips out food and energy, came in at 3.1 percent — still above target but tracking in the right direction.</p><p>'We are committed to restoring price stability, and the data give us reason for cautious optimism,' Powell said. 'But we are not declaring victory.'</p><p>Markets rallied on the news, with the S&P 500 gaining 1.4 percent. Bond yields dipped as investors priced in a lower-for-longer rate environment heading into the new year.</p>",cat:"Business",author:"Sarah Mitchell",img:"https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200&q=80",tags:["Federal Reserve","Economy","Inflation","Rates"],date:"2026-11-11",published:true,featured:true,breaking:false,views:4821},
-  {id:2,title:"UN Climate Summit Reaches Landmark Accord on Fossil Fuel Phase-Out",exc:"Nearly 190 nations agreed to a legally binding timeline to end coal, oil and gas subsidies by 2035, calling it a historic turning point.",body:"<p>Delegates from 189 countries reached a sweeping climate agreement early Thursday morning after two weeks of marathon negotiations in Dubai, committing for the first time to a legally binding schedule for phasing out fossil fuel subsidies over the next decade.</p><p>The accord — dubbed the Dubai Compact — requires wealthy nations to eliminate direct subsidies by 2030 and developing nations by 2035. It also establishes a loss-and-damage fund of $500 billion for countries already suffering the worst effects of climate change.</p><p>'This is the beginning of the end of the fossil fuel era,' said UN Secretary-General António Guterres. 'History will judge whether we acted in time.'</p><p>Environmental groups called the deal a breakthrough, though some scientists warned the timeline still falls short of what models show is needed to limit warming to 1.5 degrees Celsius above pre-industrial levels.</p>",cat:"World News",author:"James Okafor",img:"https://images.unsplash.com/photo-1569163139599-0f4517e36f51?w=1200&q=80",tags:["Climate","UN","Fossil Fuels","Environment"],date:"2026-11-10",published:true,featured:false,breaking:true,views:9340},
-  {id:3,title:"OpenAI Unveils GPT-6 With Native Video Generation and Real-Time Reasoning",exc:"The new model processes live video feeds and executes multi-step tasks autonomously, marking the most significant capability jump since GPT-4.",body:"<p>OpenAI on Tuesday released GPT-6, its most powerful model to date, featuring native video understanding, real-time reasoning chains, and the ability to execute multi-step agentic tasks without human handoffs.</p><p>In live demonstrations, the model analyzed security camera footage in real time, wrote and ran corrective code, and completed a complex tax filing using only a photograph of handwritten notes — all within a single session.</p><p>CEO Sam Altman described GPT-6 as 'the first model that genuinely thinks before it speaks, at every step.' The release comes eight months after a rival model from Google briefly topped benchmarks, intensifying the race among frontier AI labs.</p><p>GPT-6 will be available to ChatGPT Plus subscribers immediately and to developers via API starting next week. Enterprise pricing has not yet been announced.</p>",cat:"Tech",author:"Priya Nair",img:"https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=1200&q=80",tags:["AI","OpenAI","GPT-6","Technology"],date:"2026-11-09",published:true,featured:false,breaking:false,views:15200},
-  {id:4,title:"India's Economy Overtakes Japan to Become World's Third Largest",exc:"IMF data confirms India's GDP crossed $5.4 trillion in 2026, driven by manufacturing growth and a booming services export sector.",body:"<p>India's economy officially surpassed Japan's in 2026 to become the world's third largest by nominal GDP, according to data released by the International Monetary Fund on Tuesday. India's output reached $5.4 trillion, edging past Japan's $5.1 trillion as Tokyo's economy contracted for the second consecutive year.</p><p>The milestone, long anticipated by economists, reflects a decade of sustained structural reform, infrastructure investment, and a surge in technology and services exports. India's manufacturing sector grew 11 percent last year, bolstered by companies diversifying supply chains away from China.</p><p>Prime Minister Narendra Modi called the data 'a testament to the ambitions of 1.4 billion Indians.' The government has set a target of reaching a $7 trillion economy by 2030.</p>",cat:"Business",author:"Ananya Krishnan",img:"https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1200&q=80",tags:["India","Economy","GDP","Global"],date:"2026-11-08",published:true,featured:false,breaking:false,views:7650},
-  {id:5,title:"Scientists Achieve Room-Temperature Superconductivity in New Carbon Compound",exc:"Researchers at MIT say the material works at ambient pressure and temperature, potentially revolutionising energy transmission and computing.",body:"<p>Physicists at the Massachusetts Institute of Technology announced Wednesday they have created a material that conducts electricity with zero resistance at room temperature and normal atmospheric pressure — a breakthrough that researchers have chased for more than a century.</p><p>The compound, a layered carbon-hydrogen structure called hydrogenated graphene fluoride, was synthesised using a novel high-pressure deposition technique. When cooled only slightly below room temperature, it demonstrated superconductivity at pressures no higher than a standard car tyre.</p><p>'We have verified this result nine times across three independent labs,' said lead researcher Dr. Elena Vasquez. 'We are as confident as we can be.'</p><p>If the finding holds up to external replication, it could transform power grids, MRI machines, maglev transport, and quantum computers, eliminating the enormous energy losses that occur in conventional conductors.</p>",cat:"Tech",author:"Daniel Park",img:"https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=1200&q=80",tags:["Science","Superconductivity","MIT","Physics"],date:"2026-11-07",published:true,featured:false,breaking:false,views:11800},
-  {id:6,title:"Manchester City Win Champions League Final in Penalty Shootout",exc:"Erling Haaland's decisive spot-kick sealed a 4-3 shootout victory over Real Madrid at Wembley after a thrilling 1-1 draw.",body:"<p>Manchester City lifted the Champions League trophy for the third time in four years after defeating Real Madrid on penalties at Wembley Stadium on Saturday night. The match ended 1-1 after extra time, with Erling Haaland converting the winning penalty in sudden death.</p><p>Vinicius Jr. opened the scoring in the 38th minute with a stunning volley, only for Kevin De Bruyne to equalise with a free kick on the stroke of half-time. Both sides hit the woodwork twice in a tense second half before the game headed to extra time and then penalties.</p><p>City goalkeeper Ederson saved two penalties from Kylian Mbappé and Federico Valverde before Haaland, characteristically composed, tucked the ball into the bottom corner to spark wild celebrations among the blue half of a 90,000-strong crowd.</p>",cat:"Sports",author:"Tom Granger",img:"https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1200&q=80",tags:["Football","Champions League","Manchester City","UEFA"],date:"2026-11-06",published:true,featured:false,breaking:false,views:28900},
-  {id:7,title:"Surrealism Returns: How Young Artists Are Reclaiming the Uncanny",exc:"From São Paulo to Seoul, a new generation is reviving dreamlike imagery — not as nostalgia, but as a response to algorithmic life.",body:"<p>Walk into almost any art fair in 2026 and you will find them: paintings of melting clocks, figures with misplaced body parts, skies filled with impossible light. Surrealism is back, and this time its practitioners are mostly under 35.</p><p>The movement's new wave draws directly from the original — Dalí, Magritte, Kahlo — but filters it through contemporary anxieties: surveillance capitalism, climate grief, the flattening of experience by social media algorithms. The result is work that feels both strange and urgently relevant.</p><p>'We live in a world curated by machines,' says São Paulo-based painter Luisa Ferreira, 29, whose hyperrealist canvases depict human figures dissolving into feeds of content. 'Surrealism is the only honest response to that.'</p><p>Major institutions are taking notice. The Tate Modern in London announced a major group show opening in February, and Christie's reported a 340 percent increase in sales of neo-surrealist works in the past 18 months.</p>",cat:"Lifestyle",author:"Clara Beaumont",img:"https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=1200&q=80",tags:["Art","Surrealism","Culture","Painting"],date:"2026-11-05",published:true,featured:false,breaking:false,views:3400},
-  {id:8,title:"WHO Declares End to Mpox Public Health Emergency",exc:"Global cases have fallen 94 percent since the 2022 peak following widespread vaccination and improved containment protocols.",body:"<p>The World Health Organization declared an end to the mpox public health emergency of international concern on Monday, citing a 94 percent reduction in global cases since the outbreak peaked in mid-2022 and the successful rollout of vaccines across 47 countries.</p><p>At its height, the outbreak affected more than 90,000 people across six continents in a single year, overwhelming public health infrastructure in several countries. The emergency declaration, first issued in July 2022, mobilised resources and fast-tracked vaccine approvals.</p><p>WHO Director-General Tedros Adhanom Ghebreyesus praised the global response but cautioned that vigilance must continue. 'The emergency is over, but mpox has not disappeared,' he said at a Geneva press briefing. 'We must maintain surveillance and equitable vaccine access.'</p>",cat:"World News",author:"Marie Dupont",img:"https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?w=1200&q=80",tags:["WHO","Health","Mpox","Global"],date:"2026-11-04",published:true,featured:false,breaking:false,views:5100}
-];
+// Demo articles are now served exclusively by the PHP API (IDs 9001-9008).
+// The JS no longer maintains a separate copy.
 
 async function loadArticles() {
+  // PHP always returns demo articles (IDs 9001-9008) merged with DB articles,
+  // so both logged-in and logged-out users see the same baseline content.
+  // Admin (?admin=1) also gets draft articles; public gets published only.
   try {
-    // Admin fetches all articles (incl. drafts) via ?admin=1 — no demo fallback
     const url = loggedIn ? 'api/articles.php?admin=1' : 'api/articles.php';
     const data = await apiFetch(url);
-    if (loggedIn) {
-      // Admin view: show real articles only, empty state if none yet
-      articles = Array.isArray(data) ? data : [];
-    } else {
-      // Public view: fall back to demo articles if DB is empty
-      articles = Array.isArray(data) && data.length ? data : DEMO_ARTICLES;
-    }
+    articles = Array.isArray(data) ? data : [];
   } catch(e) {
-    if (!loggedIn) articles = DEMO_ARTICLES;
-    // If admin fetch fails, keep whatever articles[] currently has
+    // Keep existing articles on failure rather than wiping them
+    if (!articles.length) articles = [];
   }
 }
 
@@ -1389,6 +1377,8 @@ async function saveArticle() {
 async function togglePublish(id) {
   const a = articles.find(x=>x.id===id);
   if (!a) return;
+  // Demo articles (ID >= 9000) are served by PHP and can't be managed here
+  if (id >= 9000) { showToast('Demo articles cannot be modified', 'error'); return; }
   try {
     await apiFetch('api/articles.php', {
       method: 'PUT',
@@ -1404,6 +1394,7 @@ async function togglePublish(id) {
 }
 
 async function deleteArticle(id) {
+  if (id >= 9000) { showToast('Demo articles cannot be deleted', 'error'); return; }
   try {
     await apiFetch('api/articles.php?id=' + id, {method:'DELETE'});
     await loadArticles();
@@ -1998,16 +1989,19 @@ function adminTab(tab) {
 }
 
 function updateDashStats() {
-  document.getElementById('statTotal').textContent   = articles.length;
-  document.getElementById('statPub').textContent     = articles.filter(a=>a.published).length;
-  document.getElementById('statDraft').textContent   = articles.filter(a=>!a.published).length;
-  document.getElementById('statBreaking').textContent= articles.filter(a=>a.breaking).length;
+  // Stats count only real (non-demo) articles authored in the DB
+  const real = articles.filter(a=>a.id<9000);
+  document.getElementById('statTotal').textContent   = real.length;
+  document.getElementById('statPub').textContent     = real.filter(a=>a.published).length;
+  document.getElementById('statDraft').textContent   = real.filter(a=>!a.published).length;
+  document.getElementById('statBreaking').textContent= real.filter(a=>a.breaking).length;
 }
 
 function renderRecentAdminTable() {
   const el = document.getElementById('recentAdminTable');
   if (!el) return;
-  const items = [...articles].slice(0,8);
+  // Show only real DB articles in the recent articles panel
+  const items = articles.filter(a=>a.id<9000).slice(0,8);
   if (!items.length) { el.innerHTML='<div class="empty-table">No articles yet. <span style="color:var(--crimson);cursor:pointer" onclick="adminTab(\'new\')">Add one →</span></div>'; return; }
   el.innerHTML = items.map(a=>adminRowHtml(a)).join('');
 }
@@ -2015,8 +2009,10 @@ function renderRecentAdminTable() {
 function renderAdminArticlesTable() {
   const el = document.getElementById('allArticlesTable');
   if (!el) return;
-  if (!articles.length) { el.innerHTML='<div class="table-wrap"><div class="empty-table">No articles yet. <span style="color:var(--crimson);cursor:pointer" onclick="adminTab(\'new\')">Add one →</span></div></div>'; return; }
-  el.innerHTML = '<div class="table-wrap"><div class="table-head"><h3>All Articles ('+articles.length+')</h3><span onclick="adminTab(\'new\')" style="font-size:12px;color:var(--crimson);cursor:pointer;font-weight:600">+ New Article</span></div><div style="padding:0 24px 8px">'+articles.map(a=>adminRowHtml(a)).join('')+'</div></div>';
+  // Only show real DB articles in the management panel (demo articles have ID >= 9000)
+  const real = articles.filter(a=>a.id<9000);
+  if (!real.length) { el.innerHTML='<div class="table-wrap"><div class="empty-table">No articles yet. <span style="color:var(--crimson);cursor:pointer" onclick="adminTab(\'new\')">Add one →</span></div></div>'; return; }
+  el.innerHTML = '<div class="table-wrap"><div class="table-head"><h3>All Articles ('+real.length+')</h3><span onclick="adminTab(\'new\')" style="font-size:12px;color:var(--crimson);cursor:pointer;font-weight:600">+ New Article</span></div><div style="padding:0 24px 8px">'+real.map(a=>adminRowHtml(a)).join('')+'</div></div>';
 }
 
 function adminRowHtml(a) {
