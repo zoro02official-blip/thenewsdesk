@@ -1035,12 +1035,29 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">Category</label>
-            <select class="form-select" id="fCat"><option value="">Select category…</option><option>World News</option><option>Business</option><option>Tech</option><option>Lifestyle</option><option>Sports</option></select>
+            <div class="form-label-row">
+              <label class="form-label">Category</label>
+              <span id="catAutoLabel" style="display:none;font-size:11px;color:#10b981;font-weight:600;letter-spacing:.03em">✦ AUTO-DETECTED</span>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <select class="form-select" id="fCat" style="flex:1" onchange="document.getElementById('catAutoLabel').style.display='none'"><option value="">Select category…</option><option>World News</option><option>Business</option><option>Tech</option><option>Lifestyle</option><option>Sports</option></select>
+              <button type="button" onclick="runCatDetect()" style="white-space:nowrap;padding:0 14px;height:38px;background:#1f2937;border:1px solid #374151;color:#9ca3af;border-radius:6px;font-size:12px;cursor:pointer;flex-shrink:0" title="Auto-detect category from title and content">⚡ Detect</button>
+            </div>
+            <div class="form-hint">Start typing your headline and body — category will auto-detect as you write.</div>
           </div>
           <div class="form-group">
-            <label class="form-label">Author</label>
-            <input class="form-input" id="fAuthor" placeholder="Reporter name"/>
+            <label class="form-label">Author / Writer</label>
+            <input class="form-input" id="fAuthor" placeholder="Reporter name" list="authorList" autocomplete="off"/>
+            <datalist id="authorList">
+              <option value="Sarah Mitchell"/>
+              <option value="James Okafor"/>
+              <option value="Elena Vasquez"/>
+              <option value="Marcus Thompson"/>
+              <option value="Priya Sharma"/>
+              <option value="David Chen"/>
+              <option value="Aisha Kamara"/>
+              <option value="Staff Reporter"/>
+            </datalist>
           </div>
         </div>
         <div class="form-group">
@@ -2078,6 +2095,7 @@ function resetForm() {
   ['fTitle','fExc','fAuthor','fImg','fTags','fDate'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
   quill.setContents([]);
   document.getElementById('fCat').value='';
+  document.getElementById('catAutoLabel').style.display='none';
   document.getElementById('fPublished').checked=true;
   document.getElementById('fFeatured').checked=false;
   document.getElementById('fBreaking').checked=false;
@@ -2091,6 +2109,65 @@ function resetForm() {
 }
 
 function cancelEdit() { resetForm(); adminTab('articles'); }
+
+// ─── Category auto-detect ───────────────────────────────
+const CAT_KEYWORDS = {
+  'Business':   ['stock','market','gdp','inflation','bank','economy','trade','tariff','invest','revenue','profit','ipo','startup','fund','earn','finance','tax','recession','interest rate','federal reserve','wall street','nasdaq','dow jones','currency','bond','dividend','merger','acquisition','brics','commodit','billion','trillion','percent'],
+  'Tech':       ['ai','artificial intelligence','machine learning','software','hardware','app','silicon valley','google','microsoft','apple','meta','openai','robot','cyber','hack','crypto','blockchain','gpu','chip','semiconductor','data','cloud','5g','quantum','startup','algorithm','neural','model','gpt','chatgpt','vision pro','spacecraft','satellite','drone'],
+  'Sports':     ['football','cricket','basketball','tennis','fifa','olympic','league','match','score','team','player','goal','championship','tournament','athlete','game','trophy','coach','transfer','season','nba','nfl','premier league','formula','f1','wimbledon','series','innings','wicket','runs','goal','stadium'],
+  'Lifestyle':  ['health','wellness','food','travel','fashion','culture','arts','music','film','mental health','diet','fitness','relationship','family','home','design','beauty','style','cook','recipe','restaurant','well-being','meditation','yoga','nutrition','vitamins','sleep','exercise','dementia','alzheimer','weight','obesity'],
+  'Science':    ['research','study','climate','environment','energy','space','nasa','biology','chemistry','physics','gene','dna','fossil','planet','species','ocean','carbon','emission','renewable','solar','wind','vaccine','virus','cancer','protein','mutation','evolution','geology','atmosphere','cosmic','star','galaxy','telescope','crispr'],
+  'World News': ['war','conflict','un ','nato','treaty','diplomat','sanction','refugee','ceasefire','geopolit','military','election','president','prime minister','government','foreign','international','ukraine','russia','china','middle east','iran','israel','north korea','summit','bilateral','humanitarian','peace','terror','protest','coup','parliament'],
+};
+
+let _catDebounce = null;
+
+function detectCategory(text) {
+  const t = (text || '').toLowerCase();
+  if (t.length < 20) return '';
+  let best = '', bestScore = 0;
+  for (const [cat, kws] of Object.entries(CAT_KEYWORDS)) {
+    let score = 0;
+    for (const kw of kws) { if (t.includes(kw)) score++; }
+    if (score > bestScore) { bestScore = score; best = cat; }
+  }
+  return bestScore >= 1 ? best : '';
+}
+
+function runCatDetect(silent) {
+  const title = (document.getElementById('fTitle')||{}).value || '';
+  const body  = (typeof quill !== 'undefined') ? quill.getText() : '';
+  const exc   = (document.getElementById('fExc')||{}).value || '';
+  const combined = title + ' ' + exc + ' ' + body;
+  const detected = detectCategory(combined);
+  if (!detected) { if (!silent) showToast('Not enough content to detect category', 'info'); return; }
+  const sel = document.getElementById('fCat');
+  // map 'Science' → closest available option
+  const optMap = {'Science':'World News','Entertainment':'World News','Politics':'World News'};
+  const catVal = ['World News','Business','Tech','Lifestyle','Sports'].includes(detected) ? detected : (optMap[detected]||'');
+  if (catVal && sel.value !== catVal) {
+    sel.value = catVal;
+    document.getElementById('catAutoLabel').style.display = 'inline';
+    if (!silent) showToast('Category auto-detected: ' + catVal, 'ok');
+  } else if (catVal && !silent) {
+    showToast('Already set: ' + catVal, 'info');
+  }
+}
+
+function scheduleCatDetect() {
+  clearTimeout(_catDebounce);
+  _catDebounce = setTimeout(()=>{ if (!document.getElementById('fCat').value) runCatDetect(true); }, 900);
+}
+
+// Wire up auto-detect listeners after DOM ready
+document.addEventListener('DOMContentLoaded', ()=>{
+  const titleEl = document.getElementById('fTitle');
+  const excEl   = document.getElementById('fExc');
+  if (titleEl) titleEl.addEventListener('input', scheduleCatDetect);
+  if (excEl)   excEl.addEventListener('input',  scheduleCatDetect);
+  // quill fires text-change — wired in initEditor below
+});
+// ───────────────────────────────────────────────────────
 
 function updateWc() {
   const body = (typeof quill !== 'undefined') ? quill.getText() : '';
@@ -2116,7 +2193,7 @@ var quill = new Quill('#quill-editor', {
     ]
   }
 });
-quill.on('text-change', function() { updateWc(); });
+quill.on('text-change', function() { updateWc(); scheduleCatDetect(); });
 
 document.addEventListener('DOMContentLoaded', async () => {
   try { setHeaderDate(); } catch(e) {}
