@@ -116,6 +116,10 @@ nav{display:none!important}
 .card-img img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
 .card:hover .card-img img{transform:scale(1.04)}
 .card-img-ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#ccc}
+.card-vid-wrap{position:relative;width:100%;height:100%;overflow:hidden}
+.card-vid-wrap video{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.card-vid-wrap::after{content:'▶';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,.55);border:2px solid rgba(255,255,255,.75);color:#fff;font-size:14px;line-height:36px;text-align:center;padding-left:3px;box-sizing:border-box;pointer-events:none}
+.card:hover .card-vid-wrap video{transform:scale(1.04)}
 .card-body{padding:16px}
 .card-cat{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--crimson);margin-bottom:8px}
 .card-cat:hover{text-decoration:underline}
@@ -242,6 +246,7 @@ nav{display:none!important}
 .related-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08);transform:translateY(-2px)}
 .related-img{height:120px;background:#e8e8e8;overflow:hidden}
 .related-img img{width:100%;height:100%;object-fit:cover}
+.related-img video{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
 .related-body{padding:12px}
 .related-cat{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--crimson);margin-bottom:4px}
 .related-title{font-family:'Playfair Display',serif;font-size:14px;font-weight:700;line-height:1.3;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;color:var(--txt)}
@@ -1709,9 +1714,12 @@ function renderFeed(pub) {
 }
 
 function cardHtml(a) {
-  const imgPart = a.img && !isVideo(a.img)
-    ? `<img src="${esc(a.img)}" alt="${esc(a.title)}" loading="lazy" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<div class=\\'card-img-ph\\'><svg width=\\'32\\' height=\\'32\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'#ccc\\' stroke-width=\\'1.5\\'><rect x=\\'3\\' y=\\'3\\' width=\\'18\\' height=\\'18\\' rx=\\'2\\'/><circle cx=\\'8.5\\' cy=\\'8.5\\' r=\\'1.5\\'/><polyline points=\\'21 15 16 10 5 21\\'/></svg></div>')"/>`
-    : `<div class="card-img-ph"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>`;
+  const PH = `<div class="card-img-ph"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>`;
+  const imgPart = a.img && isVideo(a.img)
+    ? `<div class="card-vid-wrap"><video src="${esc(a.img)}" preload="metadata" muted playsinline onloadedmetadata="this.currentTime=1" onerror="this.closest('.card-vid-wrap').outerHTML='${PH.replace(/'/g,"\\'")}'" ></video></div>`
+    : a.img
+      ? `<img src="${esc(a.img)}" alt="${esc(a.title)}" loading="lazy" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<div class=\\'card-img-ph\\'><svg width=\\'32\\' height=\\'32\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'#ccc\\' stroke-width=\\'1.5\\'><rect x=\\'3\\' y=\\'3\\' width=\\'18\\' height=\\'18\\' rx=\\'2\\'/><circle cx=\\'8.5\\' cy=\\'8.5\\' r=\\'1.5\\'/><polyline points=\\'21 15 16 10 5 21\\'/></svg></div>')"/>`
+      : PH;
   const tags = (a.tags||[]).slice(0,3).map(t=>`<span class="tag-pill" onclick="event.stopPropagation();openTagSearch('${esc(t)}')">${esc(t)}</span>`).join('');
   return `<div class="card" onclick="openArticle(${a.id})">
     <div class="card-img">${imgPart}</div>
@@ -1774,7 +1782,7 @@ function renderRecentWidget(containerId) {
   const pub = articles.slice(0,5);
   if (!pub.length) { el.innerHTML=''; return; }
   el.innerHTML = pub.map(a=>`<div class="sidebar-story" onclick="openArticle(${a.id})">
-    ${a.img && !isVideo(a.img) ? `<img class="sidebar-story-img" src="${esc(a.img)}" alt="" loading="lazy" onerror="this.style.display='none'"/>` : '<div class="sidebar-story-img" style="display:flex;align-items:center;justify-content:center;background:#e8e8e8">'+catSvg(a.cat,18,'#888')+'</div>'}
+    ${a.img && isVideo(a.img) ? `<video class="sidebar-story-img" src="${esc(a.img)}" preload="metadata" muted playsinline style="object-fit:cover;flex-shrink:0" onloadedmetadata="this.currentTime=1" onerror="this.outerHTML='<div class=\\'sidebar-story-img\\' style=\\'display:flex;align-items:center;justify-content:center;background:#e8e8e8\\'></div>'"></video>` : a.img ? `<img class="sidebar-story-img" src="${esc(a.img)}" alt="" loading="lazy" onerror="this.style.display='none'"/>` : '<div class="sidebar-story-img" style="display:flex;align-items:center;justify-content:center;background:#e8e8e8">'+catSvg(a.cat,18,'#888')+'</div>'}
     <div class="sidebar-story-info">
       <div class="ss-cat">${esc(a.cat)}</div>
       <div class="ss-title">${esc(a.title)}</div>
@@ -1891,7 +1899,7 @@ async function openArticle(id, pushStack=true) {
   const related = articles.filter(x=>x.id!==id && x.cat===a.cat).slice(0,3);
   const relGrid = document.getElementById('relatedGrid');
   relGrid.innerHTML = related.map(r=>`<div class="related-card" onclick="openArticle(${r.id})">
-    <div class="related-img">${r.img&&!isVideo(r.img)?`<img src="${esc(r.img)}" alt="" loading="lazy"/>`:''}</div>
+    <div class="related-img">${r.img&&isVideo(r.img)?`<video src="${esc(r.img)}" preload="metadata" muted playsinline onloadedmetadata="this.currentTime=1"></video>`:r.img?`<img src="${esc(r.img)}" alt="" loading="lazy"/>`:''}  </div>
     <div class="related-body"><div class="related-cat">${esc(r.cat)}</div><div class="related-title">${esc(r.title)}</div></div></div>`).join('') || '<div style="color:var(--txt2);font-size:13px">No related stories.</div>';
   document.getElementById('relatedSection').style.display = related.length ? '' : 'none';
 
@@ -2054,7 +2062,7 @@ function adminRowHtml(a) {
   const pubLabel = a.published ? 'Unpublish' : 'Publish';
   const pubClass = a.published ? 'admin-btn-unpub' : 'admin-btn-pub';
   return `<div class="admin-article-row">
-    ${a.img&&!isVideo(a.img)?`<img class="admin-art-thumb" src="${esc(a.img)}" alt="" onerror="this.style.display='none'"/>` : `<div class="admin-art-thumb" style="display:flex;align-items:center;justify-content:center;font-size:20px">${CAT_ICONS[a.cat]||'📰'}</div>`}
+    ${a.img&&isVideo(a.img)?`<video class="admin-art-thumb" src="${esc(a.img)}" preload="metadata" muted playsinline style="object-fit:cover;flex-shrink:0" onloadedmetadata="this.currentTime=1"></video>`:a.img?`<img class="admin-art-thumb" src="${esc(a.img)}" alt="" onerror="this.style.display='none'"/>` : `<div class="admin-art-thumb" style="display:flex;align-items:center;justify-content:center;font-size:20px">${CAT_ICONS[a.cat]||'📰'}</div>`}
     <div class="admin-art-info">
       <div class="admin-art-title">${esc(a.title)}</div>
       <div class="admin-art-meta">${esc(a.cat)} · ${esc(a.author||'Staff')} · ${fmtDateShort(a.date)} ${a.breaking?'· 🔴 Breaking':''} ${!a.published?'· <span style="color:#f59e0b">Draft</span>':''}</div>
