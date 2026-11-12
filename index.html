@@ -1665,7 +1665,9 @@ function renderHome() {
 
 function renderHero(pub) {
   const withImg = pub.filter(a=>a.img && !isVideo(a.img));
-  const feat = withImg.find(a=>a.featured) || withImg[0] || pub[0];
+  // Prefer featured real article, then any real article, then demo fallback
+  const realWithImg = withImg.filter(a=>a.id < 9000);
+  const feat = withImg.find(a=>a.featured) || realWithImg[0] || withImg[0] || pub[0];
   const content = document.getElementById('heroContent');
   const img = document.getElementById('heroImg');
   const empty = document.getElementById('heroEmpty');
@@ -1701,10 +1703,13 @@ function heroClick() {
 
 function renderFeed(pub) {
   const grid = document.getElementById('feedGrid');
-  // Filter out articles without images for a premium, fully-filled look
   const withImg = pub.filter(a=>a.img && !isVideo(a.img));
-  // Use 8 items so grid fills evenly; use all if fewer than 8 have images
-  const items = (withImg.length ? withImg : pub).slice(0,8);
+  const pool = withImg.length ? withImg : pub;
+  // Real DB articles (id < 9000) always shown first so user content is never
+  // buried by demo articles — demo articles fill remaining slots up to 8
+  const real = pool.filter(a=>a.id < 9000);
+  const demo = pool.filter(a=>a.id >= 9000);
+  const items = [...real, ...demo].slice(0,8);
   if (!items.length) { grid.innerHTML=''; return; }
   grid.innerHTML = items.map(a=>cardHtml(a)).join('');
 }
