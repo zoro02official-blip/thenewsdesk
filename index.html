@@ -1056,17 +1056,18 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
           </div>
           <div class="form-group">
             <label class="form-label">Author / Writer</label>
-            <input class="form-input" id="fAuthor" placeholder="Reporter name" list="authorList" autocomplete="off"/>
-            <datalist id="authorList">
-              <option value="Sarah Mitchell"/>
-              <option value="James Okafor"/>
-              <option value="Elena Vasquez"/>
-              <option value="Marcus Thompson"/>
-              <option value="Priya Sharma"/>
-              <option value="David Chen"/>
-              <option value="Aisha Kamara"/>
-              <option value="Staff Reporter"/>
-            </datalist>
+            <select class="form-input" id="fAuthor" style="cursor:pointer">
+              <option value="">— Select author —</option>
+              <option value="Sarah Mitchell">Sarah Mitchell</option>
+              <option value="James Okafor">James Okafor</option>
+              <option value="Elena Vasquez">Elena Vasquez</option>
+              <option value="Marcus Thompson">Marcus Thompson</option>
+              <option value="Priya Sharma">Priya Sharma</option>
+              <option value="David Chen">David Chen</option>
+              <option value="Aisha Kamara">Aisha Kamara</option>
+              <option value="Chris Morgan">Chris Morgan</option>
+              <option value="Staff Reporter">Staff Reporter</option>
+            </select>
           </div>
         </div>
         <div class="form-group">
@@ -1134,6 +1135,7 @@ const AUTHORS = {
   'Priya Sharma':     {role:'Asia-Pacific Correspondent', bio:'Based in New Delhi, covering South Asia, Southeast Asia, and geopolitics across the Indo-Pacific region.'},
   'David Chen':       {role:'Investigative Reporter',  bio:'Specialises in investigations into corporate and political corruption. Multiple press freedom award recipient.'},
   'Aisha Kamara':     {role:'Culture & Lifestyle Correspondent', bio:'Covers arts, entertainment, and social trends. Previously at The Guardian and The Independent.'},
+  'Chris Morgan':     {role:'Editor-in-Chief',          bio:'Founder and Editor-in-Chief of The News Desk. Veteran journalist with over two decades covering global affairs, politics, and breaking news.'},
   'Staff Reporter':   {role:'News Desk',               bio:'The News Desk staff team covering breaking news and developing stories around the clock.'},
 };
 const CAT_PATHS = {
@@ -1684,8 +1686,6 @@ function renderHero(pub) {
       <span>${esc(feat.author||'Staff')}</span>
       <span class="hero-dot"></span>
       <span>${fmtDateShort(feat.date)}</span>
-      <span class="hero-dot"></span>
-      <span>${readTime(feat.body)}</span>
     </div>
     <div class="hero-read">Read Story <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></div>`;
   document.getElementById('heroSection').dataset.id = feat.id;
@@ -1720,7 +1720,7 @@ function cardHtml(a) {
       <div class="card-cat" onclick="event.stopPropagation();setNav('${esc(a.cat)}')">${esc(a.cat)}</div>
       <div class="card-title">${esc(a.title)}</div>
       <div class="card-exc">${esc(a.exc||'')}</div>
-      <div class="card-footer"><span class="card-date">${fmtDateShort(a.date)}</span><span class="card-rt">${readTime(a.body)}</span></div>
+      <div class="card-footer"><span class="card-date">${fmtDateShort(a.date)}</span></div>
       ${tags?'<div class="card-tags">'+tags+'</div>':''}
     </div></div>`;
 }
@@ -1754,7 +1754,6 @@ function renderPopularWidget(containerId) {
     <div>
       <div class="popular-cat">${esc(a.cat)}</div>
       <div class="popular-title">${esc(a.title)}</div>
-      <div class="popular-views">${fmtViews(a.views)}</div>
     </div></div>`).join('');
 }
 
@@ -1809,7 +1808,7 @@ async function openArticle(id, pushStack=true) {
   const bio = AUTHORS[a.author] || {role:'Contributor', bio:''};
   document.getElementById('artAvatar').textContent = getInitials(a.author||'Staff');
   document.getElementById('artBylineName').textContent = a.author || 'Staff Reporter';
-  document.getElementById('artBylineMeta').innerHTML = `<span>${bio.role}</span><span>·</span><span>${fmtDate(a.date)}</span><span>·</span><span>${readTime(a.body)}</span><span>·</span><span>${fmtViews(a.views)}</span>`;
+  document.getElementById('artBylineMeta').innerHTML = `<span>${bio.role}</span><span>·</span><span>${fmtDate(a.date)}</span>`;
 
   // Hero image / video
   const heroImg = document.getElementById('artHeroImg');
