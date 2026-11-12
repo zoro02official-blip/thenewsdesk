@@ -1394,6 +1394,7 @@ async function saveArticle() {
     }
 
     await loadArticles();
+    renderHome();
     resetForm();
     adminTab('articles');
     renderAdminArticlesTable();
@@ -1701,14 +1702,15 @@ function renderFeed(pub) {
   const grid = document.getElementById('feedGrid');
   // Filter out articles without images for a premium, fully-filled look
   const withImg = pub.filter(a=>a.img && !isVideo(a.img));
-  const items = (withImg.length ? withImg : pub).slice(0,6);
+  // Use 8 items so grid fills evenly; use all if fewer than 8 have images
+  const items = (withImg.length ? withImg : pub).slice(0,8);
   if (!items.length) { grid.innerHTML=''; return; }
   grid.innerHTML = items.map(a=>cardHtml(a)).join('');
 }
 
 function cardHtml(a) {
   const imgPart = a.img && !isVideo(a.img)
-    ? `<img src="${esc(a.img)}" alt="${esc(a.title)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/><div class="card-img-ph" style="display:none"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>`
+    ? `<img src="${esc(a.img)}" alt="${esc(a.title)}" loading="lazy" onerror="this.closest('.card').style.display='none'"/>`
     : `<div class="card-img-ph"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>`;
   const tags = (a.tags||[]).slice(0,3).map(t=>`<span class="tag-pill" onclick="event.stopPropagation();openTagSearch('${esc(t)}')">${esc(t)}</span>`).join('');
   return `<div class="card" onclick="openArticle(${a.id})">
