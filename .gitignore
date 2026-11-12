@@ -1,0 +1,9 @@
+# Uploaded media files — keep the directory but ignore its contents
+# so git deployments never wipe images uploaded via the admin panel
+uploads/media/*
+!uploads/media/.keep
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini

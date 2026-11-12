@@ -933,7 +933,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
       </div>
       </div>
     <div class="footer-bottom">
-      <div>© 2025 The News Desk. All rights reserved.</div>
+      <div>© 2018 The News Desk. All rights reserved.</div>
       <div class="social-platform" style="gap:8px">
         <a href="https://www.youtube.com/@newsdesk_360?si=8Uy2vms1zGtZN-1Q" target="_blank" rel="noopener" class="social-icon" style="background:#ff0000;text-decoration:none" title="YouTube">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="#fff"><path d="M23.5 6.9a3 3 0 0 0-2.1-2.1C19.5 4.3 12 4.3 12 4.3s-7.5 0-9.4.5A3 3 0 0 0 .5 6.9C0 8.8 0 12 0 12s0 3.2.5 5.1a3 3 0 0 0 2.1 2.1C4.5 19.7 12 19.7 12 19.7s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1C24 15.2 24 12 24 12s0-3.2-.5-5.1zM9.8 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
@@ -1710,7 +1710,7 @@ function renderFeed(pub) {
 
 function cardHtml(a) {
   const imgPart = a.img && !isVideo(a.img)
-    ? `<img src="${esc(a.img)}" alt="${esc(a.title)}" loading="lazy" onerror="this.closest('.card').style.display='none'"/>`
+    ? `<img src="${esc(a.img)}" alt="${esc(a.title)}" loading="lazy" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<div class=\\'card-img-ph\\'><svg width=\\'32\\' height=\\'32\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'#ccc\\' stroke-width=\\'1.5\\'><rect x=\\'3\\' y=\\'3\\' width=\\'18\\' height=\\'18\\' rx=\\'2\\'/><circle cx=\\'8.5\\' cy=\\'8.5\\' r=\\'1.5\\'/><polyline points=\\'21 15 16 10 5 21\\'/></svg></div>')"/>`
     : `<div class="card-img-ph"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>`;
   const tags = (a.tags||[]).slice(0,3).map(t=>`<span class="tag-pill" onclick="event.stopPropagation();openTagSearch('${esc(t)}')">${esc(t)}</span>`).join('');
   return `<div class="card" onclick="openArticle(${a.id})">
