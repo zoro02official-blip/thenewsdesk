@@ -1852,10 +1852,10 @@ function heroClick() {
 function renderFeed(pub) {
   const grid = document.getElementById('feedGrid');
   // Real DB articles (id < 9000) always shown first so user content is never
-  // buried by demo articles — demo articles fill remaining slots up to 8
+  // buried by demo articles — archive/demo articles fill remaining slots
   const real = pub.filter(a=>a.id < 9000);
   const demo = pub.filter(a=>a.id >= 9000);
-  const items = [...real, ...demo].slice(0,30);
+  const items = [...real, ...demo].slice(0,200);
   if (!items.length) { grid.innerHTML=''; return; }
   grid.innerHTML = items.map(a=>cardHtml(a)).join('');
 }
