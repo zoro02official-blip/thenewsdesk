@@ -700,10 +700,16 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
         </div>
       </div>
     </div>
-    <!-- Right: More Top Stories -->
+    <!-- Right: Newsletter subscribe -->
     <div class="np-right">
-      <div class="np-col-head">More Top Stories</div>
-      <div id="recentWidget"></div>
+      <div class="np-col-head">Stay Informed</div>
+      <p style="font-size:12px;color:var(--txt2);line-height:1.6;margin-bottom:14px">Get the day's top stories delivered to your inbox every morning.</p>
+      <div class="nl-form" id="nlFormHero">
+        <input type="text" placeholder="Your name" id="nlNameHero"/>
+        <input type="email" placeholder="Email address" id="nlEmailHero"/>
+        <button onclick="subscribeNLHero()">Subscribe Free</button>
+      </div>
+      <div class="nl-ok" id="nlOkHero" style="display:none">✓ You're subscribed! Welcome aboard.</div>
     </div>
   </div>
 
@@ -1804,7 +1810,6 @@ function renderHome() {
   renderCategoryHighlights(pub);
   renderPopularWidget('popularWidget');
   renderTopicPills('topicPills');
-  renderRecentWidget('recentWidget');
   renderRecentWidget('sideMoreStories', 20);
 }
 
@@ -2163,6 +2168,13 @@ function subscribeNL() {
   if (!email || !email.includes('@')) { showToast('Enter a valid email', 'error'); return; }
   document.getElementById('nlForm').style.display='none';
   document.getElementById('nlOk').style.display='';
+  showToast('Subscribed! Welcome aboard.', 'ok');
+}
+function subscribeNLHero() {
+  const email = document.getElementById('nlEmailHero').value.trim();
+  if (!email || !email.includes('@')) { showToast('Enter a valid email', 'error'); return; }
+  document.getElementById('nlFormHero').style.display='none';
+  document.getElementById('nlOkHero').style.display='';
   showToast('Subscribed! Welcome aboard.', 'ok');
 }
 function footerSubscribe() {
