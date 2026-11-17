@@ -171,8 +171,6 @@ nav{display:none!important}
 .art-layout{display:grid;grid-template-columns:1fr 320px;gap:56px;align-items:start}
 .art-back{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--charcoal-med);cursor:pointer;margin-bottom:28px;transition:color .2s}
 .art-back:hover{color:var(--crimson)}
-.back-btn{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid var(--border);border-radius:50%;cursor:pointer;color:var(--charcoal-med);transition:all .2s;margin-bottom:20px;background:var(--bg2)}
-.back-btn:hover{color:var(--crimson);border-color:var(--crimson);background:transparent}
 .art-cat-row{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
 .art-cat-badge{display:inline-block;background:var(--crimson);color:#fff;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.15em;padding:4px 10px;cursor:pointer}
 .art-feat-badge{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:gold;border:1px solid gold;padding:3px 8px}
@@ -645,8 +643,9 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
   <div class="art-view">
     <div class="art-layout">
       <div>
-        <div class="back-btn" onclick="goBack()" title="Go back">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+        <div class="art-back" onclick="goBack()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+          Back to Stories
         </div>
         <div class="art-cat-row" id="artCatRow"></div>
         <h1 class="art-headline" id="artHeadline"></h1>
@@ -655,7 +654,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
             <img src="dmca-badge.webp" alt="DMCA.com Protection Status"/>
           </a>
           <div class="art-copyright-text">
-            <strong>COPYRIGHT NOTICE:</strong> This material is the exclusive property of <strong>THE NEWS DESK / CHRIS MORGAN</strong>. Unauthorized reproduction strictly prohibited. Report violations to <a class="copyright-email-link" href="mailto:copyright@thenewsdesk.space">copyright@thenewsdesk.space</a>.
+            <strong>COPYRIGHT NOTICE:</strong> This material is the exclusive property of <strong>THE NEWS DESK / CHRIS MORGAN</strong>. Unauthorized reproduction strictly prohibited. Report violations to <a href="mailto:copyright@thenewsdesk.space">copyright@thenewsdesk.space</a>.
           </div>
         </div>
         <p class="art-dek" id="artDek"></p>
@@ -812,7 +811,6 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
   <div class="main">
     <div class="main-layout">
       <div>
-        <div class="back-btn" onclick="goBack()" title="Go back"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg></div>
         <div class="grid-3" id="catViewGrid"></div>
       </div>
       <aside class="sidebar">
@@ -841,7 +839,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
       </div>
     </div>
   </div>
-  <div class="main"><div class="back-btn" onclick="goBack()" title="Go back" style="margin-top:16px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg></div><div id="searchResults"></div></div>
+  <div class="main"><div id="searchResults"></div></div>
 </div>
 
 <!-- ABOUT VIEW -->
@@ -854,7 +852,6 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
     </div>
   </div>
   <div class="page-content">
-    <div class="back-btn" onclick="goBack()" title="Go back" style="margin-bottom:24px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg></div>
     <div style="max-width:800px;margin:0 auto 48px">
       <h2 style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;margin-bottom:16px;color:var(--txt)">Our Mission</h2>
       <p style="font-size:16px;color:var(--txt2);line-height:1.8;margin-bottom:16px">We exist to hold power accountable and give voice to those who are too often unheard. Every story we publish is thoroughly researched, verified against primary sources, and reviewed for accuracy before it reaches your screen.</p>
@@ -879,7 +876,6 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
     </div>
   </div>
   <div class="page-content">
-    <div class="back-btn" onclick="goBack()" title="Go back" style="margin-bottom:24px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg></div>
     <div class="contact-grid">
       <div class="contact-card"><div class="cc-title">News Tips</div><div class="cc-desc">Have a story we should cover? Our secure tip line protects your identity and ensures confidentiality.</div><a class="cc-email" href="mailto:tips@thenewsdesk.space"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>tips@thenewsdesk.space</a></div>
       <div class="contact-card"><div class="cc-title">Corrections</div><div class="cc-desc">Spotted an error? We take accuracy seriously. Submit a correction request and we'll review it within 24 hours.</div><a class="cc-email" href="mailto:corrections@thenewsdesk.space"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>corrections@thenewsdesk.space</a></div>
@@ -898,7 +894,6 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
     </div>
   </div>
   <div class="page-content" style="max-width:860px;margin:0 auto">
-    <div class="back-btn" onclick="goBack()" title="Go back" style="margin-bottom:24px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg></div>
     <div class="priv-sec"><div class="priv-h">1. Information We Collect</div><p class="priv-p">We collect information you provide directly to us, such as when you subscribe to our newsletter, create an account, or contact us. This includes name, email address, and communication preferences. We also collect usage data including pages visited, articles read, and time spent on our platform.</p></div>
     <div class="priv-sec"><div class="priv-h">2. How We Use Your Information</div><p class="priv-p">Your information is used to deliver our newsletter, personalize your reading experience, improve our journalism, and communicate with you about our services. We never sell your personal data to third parties, and we do not share it with advertisers.</p></div>
     <div class="priv-sec"><div class="priv-h">3. Data Retention</div><p class="priv-p">We retain your data for as long as your account is active or as needed to provide services. You may request deletion of your account and associated data at any time by contacting privacy@thenewsdesk.space.</p></div>
@@ -956,6 +951,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
         </a>
       </div>
       <div style="display:flex;align-items:center;gap:14px">
+<a href="https://www.dmca.com/Protection/Status.aspx" target="_blank" rel="noopener"><img src="dmca-badge.webp" alt="DMCA.com Protection Status" style="height:50px;width:auto;display:block"/></a>
         <span style="cursor:pointer;transition:color .2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color=''">Terms</span>
         <span style="cursor:pointer;transition:color .2s" onclick="showView('privacy')" onmouseover="this.style.color='#fff'" onmouseout="this.style.color=''">Privacy</span>
         <span style="cursor:pointer;transition:color .2s" onclick="showView('contact')" onmouseover="this.style.color='#fff'" onmouseout="this.style.color=''">Contact</span>
@@ -1007,9 +1003,6 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
       <div class="admin-nav-item" id="an-new" onclick="adminTab('new')">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg> New Article
       </div>
-      <div class="admin-nav-item" id="an-settings" onclick="adminTab('settings')">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Settings
-      </div>
     </div>
     <div class="admin-sidebar-footer">
       <div style="font-size:12px;color:#6b7280;margin-bottom:10px" id="adminUserLabel"></div>
@@ -1040,26 +1033,6 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
       <div class="admin-title">All Articles</div>
       <div class="admin-sub">Manage your published stories</div>
       <div id="allArticlesTable"></div>
-    </div>
-    <!-- Settings Tab -->
-    <div id="tab-settings" style="display:none">
-      <div class="admin-title">Settings</div>
-      <div class="admin-sub">Site-wide configuration</div>
-      <div class="table-wrap" style="max-width:560px">
-        <div class="table-head"><h3>Copyright Notice</h3></div>
-        <div style="padding:20px 24px">
-          <p style="font-size:13px;color:#9ca3af;margin-bottom:16px;line-height:1.6">This email appears in the copyright box on every article. Changing it here updates all posts instantly.</p>
-          <label style="display:block;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#9ca3af;margin-bottom:8px">Copyright Email</label>
-          <input id="copyrightEmailInput" type="email" placeholder="copyright@thenewsdesk.space"
-            style="width:100%;background:#1a1a1a;border:1px solid #374151;color:#fff;padding:10px 14px;font-size:14px;border-radius:4px;outline:none;box-sizing:border-box;margin-bottom:14px"
-            onfocus="this.style.borderColor='#c0392b'" onblur="this.style.borderColor='#374151'"/>
-          <button onclick="saveCopyrightEmail()"
-            style="background:var(--crimson);color:#fff;border:none;padding:10px 24px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;cursor:pointer;border-radius:3px">
-            Save Email
-          </button>
-          <span id="copyrightEmailStatus" style="margin-left:12px;font-size:13px;color:#22c55e;display:none">✓ Saved</span>
-        </div>
-      </div>
     </div>
     <!-- New/Edit Article Tab -->
     <div id="tab-new" style="display:none">
@@ -2059,40 +2032,12 @@ function closeAdminPanel() {
 }
 
 function adminTab(tab) {
-  ['dash','articles','new','settings'].forEach(t=>{
+  ['dash','articles','new'].forEach(t=>{
     document.getElementById('tab-'+t).style.display = t===tab ? '' : 'none';
     document.getElementById('an-'+t).classList.toggle('active', t===tab);
   });
   if (tab==='articles') renderAdminArticlesTable();
   if (tab==='new' && !editingId) resetForm();
-  if (tab==='settings') loadCopyrightEmailInput();
-}
-
-function getCopyrightEmail() {
-  return localStorage.getItem('nd_copyright_email') || 'copyright@thenewsdesk.space';
-}
-
-function loadCopyrightEmailInput() {
-  const inp = document.getElementById('copyrightEmailInput');
-  if (inp) inp.value = getCopyrightEmail();
-}
-
-function saveCopyrightEmail() {
-  const inp = document.getElementById('copyrightEmailInput');
-  const val = (inp.value || '').trim();
-  if (!val) return;
-  localStorage.setItem('nd_copyright_email', val);
-  updateAllCopyrightEmails(val);
-  const status = document.getElementById('copyrightEmailStatus');
-  status.style.display = 'inline';
-  setTimeout(()=>{ status.style.display='none'; }, 2500);
-}
-
-function updateAllCopyrightEmails(email) {
-  document.querySelectorAll('.copyright-email-link').forEach(el=>{
-    el.href = 'mailto:' + email;
-    el.textContent = email;
-  });
 }
 
 function updateDashStats() {
@@ -2289,9 +2234,6 @@ quill.on('text-change', function() { updateWc(); scheduleCatDetect(); });
 
 document.addEventListener('DOMContentLoaded', async () => {
   try { setHeaderDate(); } catch(e) {}
-
-  // Apply saved copyright email
-  updateAllCopyrightEmails(getCopyrightEmail());
 
   // Check server session (PHP session persists across page loads automatically)
   await checkSession();
