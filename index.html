@@ -1875,23 +1875,24 @@ function _cardVidErr(el) {
 }
 
 function cardHtml(a) {
-  const TEXT_PH = `<div class="card-img-text"><div class="cit-cat">${esc(a.cat)}</div><div class="cit-title">${esc(a.title)}</div></div>`;
-  const imgPart = a.img && isVideo(a.img)
-    ? `<div class="card-vid-wrap"><video src="${esc(a.img)}" preload="metadata" muted playsinline onloadedmetadata="this.currentTime=1" onerror="_cardVidErr(this)"></video></div>`
+  var imgText = '<div class="card-img-text"><div class="cit-cat">'+esc(a.cat)+'</div><div class="cit-title">'+esc(a.title)+'</div></div>';
+  var imgPart = a.img && isVideo(a.img)
+    ? '<div class="card-vid-wrap"><video src="'+esc(a.img)+'" preload="metadata" muted playsinline onloadedmetadata="this.currentTime=1" onerror="_cardVidErr(this)"></video></div>'
     : a.img
-      ? `<img src="${esc(a.img)}" alt="${esc(a.title)}" loading="lazy" data-cat="${esc(a.cat)}" data-title="${esc(a.title)}" loading="lazy" onerror="this.style.display='none';var ph=document.createElement('div');ph.className='card-img-text';ph.innerHTML='<div class=\'cit-cat\'>'+this.dataset.cat+'</div><div class=\'cit-title\'>'+this.dataset.title+'</div>';this.parentNode.insertBefore(ph,this.nextSibling)"/>`
-      : TEXT_PH;
-  const tags = (a.tags||[]).slice(0,3).map(t=>`<span class="tag-pill" onclick="event.stopPropagation();openTagSearch('${esc(t)}')">${esc(t)}</span>`).join('');
-  return `<div class="card" onclick="openArticle(${a.id})">
-    <div class="card-img">${imgPart}</div>
-    <div class="card-body">
-      ${a.breaking?'<span class="breaking-badge" style="margin-bottom:6px;display:inline-flex"><span class="breaking-dot"></span>Breaking</span>':''}
-      <div class="card-cat" onclick="event.stopPropagation();setNav('${esc(a.cat)}')">${esc(a.cat)}</div>
-      <div class="card-title">${esc(a.title)}</div>
-      <div class="card-exc">${esc(a.exc||'')}</div>
-      <div class="card-footer"><span class="card-date">${fmtDateShort(a.date)}</span></div>
-      ${tags?'<div class="card-tags">'+tags+'</div>':''}
-    </div></div>`;
+      ? '<img src="'+esc(a.img)+'" alt="'+esc(a.title)+'" loading="lazy" onerror="this.style.display='none'" />'
+      : imgText;
+  var tags = (a.tags||[]).slice(0,3).map(function(t){return '<span class="tag-pill" onclick="event.stopPropagation();openTagSearch(''+esc(t)+'')">'+esc(t)+'</span>';}).join('');
+  var breaking = a.breaking ? '<span class="breaking-badge" style="margin-bottom:6px;display:inline-flex"><span class="breaking-dot"></span>Breaking</span>' : '';
+  return '<div class="card" onclick="openArticle('+a.id+')">'+
+    '<div class="card-img">'+imgPart+'</div>'+
+    '<div class="card-body">'+
+    breaking+
+    '<div class="card-cat" onclick="event.stopPropagation();setNav(''+esc(a.cat)+'')">'+esc(a.cat)+'</div>'+
+    '<div class="card-title">'+esc(a.title)+'</div>'+
+    '<div class="card-exc">'+esc(a.exc||'')+'</div>'+
+    '<div class="card-footer"><span class="card-date">'+fmtDateShort(a.date)+'</span></div>'+
+    (tags ? '<div class="card-tags">'+tags+'</div>' : '')+
+    '</div></div>';
 }
 
 function renderCategoryHighlights(pub) {
