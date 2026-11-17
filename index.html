@@ -128,6 +128,9 @@ nav{display:none!important}
 .section-link:hover{text-decoration:underline}
 /* CARDS */
 .grid-3{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(220px,100%),1fr));gap:24px;margin-bottom:40px;min-width:0}
+.feed-pagination{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;padding:24px 0 32px}
+.page-btn{min-width:36px;height:36px;padding:0 8px;border:1px solid rgba(220,20,60,.3);background:transparent;color:#ccc;border-radius:4px;cursor:pointer;font-size:13px;transition:all .2s}
+.page-btn:hover,.page-btn.active{background:rgba(220,20,60,.85);border-color:transparent;color:#fff}
 .card{background:var(--bg2);border:1px solid var(--border);overflow:hidden;cursor:pointer;transition:all .2s}
 .card:hover{box-shadow:0 8px 32px rgba(0,0,0,.1);transform:translateY(-2px)}
 .card-img{height:170px;background:linear-gradient(135deg,#e8e8e8,#d5d5d5);position:relative;overflow:hidden}
@@ -1852,15 +1855,50 @@ function heroClick() {
   if (id) openArticle(id);
 }
 
+let currentFeedPage = 0;
+let _feedArticles = [];
+
 function renderFeed(pub) {
-  const grid = document.getElementById('feedGrid');
   // Real DB articles (id < 9000) always shown first so user content is never
   // buried by demo articles — archive/demo articles fill remaining slots
   const real = pub.filter(a=>a.id < 9000);
   const demo = pub.filter(a=>a.id >= 9000);
-  const items = [...real, ...demo].slice(0,200);
-  if (!items.length) { grid.innerHTML=''; return; }
+  _feedArticles = [...real, ...demo];
+  _renderFeedPage();
+}
+
+function _renderFeedPage() {
+  const grid = document.getElementById('feedGrid');
+  const pageSize = 200;
+  const totalPages = Math.ceil(_feedArticles.length / pageSize);
+  const start = currentFeedPage * pageSize;
+  const items = _feedArticles.slice(start, start + pageSize);
+  if (!items.length) { grid.innerHTML=''; _renderFeedPagination(0); return; }
   grid.innerHTML = items.map(a=>cardHtml(a)).join('');
+  _renderFeedPagination(totalPages);
+}
+
+function _renderFeedPagination(total) {
+  let el = document.getElementById('feedPagination');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'feedPagination';
+    el.className = 'feed-pagination';
+    const grid = document.getElementById('feedGrid');
+    if (grid && grid.parentNode) grid.parentNode.insertBefore(el, grid.nextSibling);
+  }
+  if (total <= 1) { el.innerHTML=''; return; }
+  let html = '';
+  for (let i = 0; i < total; i++) {
+    html += '<button class="page-btn'+(i===currentFeedPage?' active':'')+'" onclick="goFeedPage('+i+')">'+(i+1)+'</button>';
+  }
+  el.innerHTML = html;
+}
+
+function goFeedPage(n) {
+  currentFeedPage = n;
+  _renderFeedPage();
+  window.scrollTo({top: document.getElementById('feedGrid').offsetTop - 80, behavior:'smooth'});
 }
 
 // Called by video card onerror — replaces the vid-wrap with a placeholder
