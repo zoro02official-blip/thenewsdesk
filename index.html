@@ -733,6 +733,10 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
           </div>
         </div>
         <div class="s-widget">
+          <div class="s-widget-head"><div class="s-widget-bar"></div>More Top Stories</div>
+          <div class="s-widget-body" style="padding:0" id="sideMoreStories"></div>
+        </div>
+        <div class="s-widget">
           <div class="s-widget-head"><div class="s-widget-bar"></div>Topics</div>
           <div class="s-widget-body">
             <div class="section-pills" id="topicPills"></div>
@@ -1801,6 +1805,7 @@ function renderHome() {
   renderPopularWidget('popularWidget');
   renderTopicPills('topicPills');
   renderRecentWidget('recentWidget');
+  renderRecentWidget('sideMoreStories', 20);
 }
 
 function renderHero(pub) {
@@ -1924,10 +1929,10 @@ function renderTopicPills(containerId) {
   }).join('');
 }
 
-function renderRecentWidget(containerId) {
+function renderRecentWidget(containerId, count) {
   const el = document.getElementById(containerId);
   if (!el) return;
-  const pub = articles.slice(0,5);
+  const pub = articles.slice(0, count || 5);
   if (!pub.length) { el.innerHTML=''; return; }
   el.innerHTML = pub.map(a=>`<div class="sidebar-story" onclick="openArticle(${a.id})">
     ${a.img && isVideo(a.img) ? `<video class="sidebar-story-img" src="${esc(a.img)}" preload="metadata" muted playsinline style="object-fit:cover;flex-shrink:0" onloadedmetadata="this.currentTime=1" onerror="this.outerHTML='<div class=\\'sidebar-story-img\\' style=\\'display:flex;align-items:center;justify-content:center;background:#e8e8e8\\'></div>'"></video>` : a.img ? `<img class="sidebar-story-img" src="${esc(a.img)}" alt="" loading="lazy" onerror="this.style.display='none'"/>` : '<div class="sidebar-story-img" style="display:flex;align-items:center;justify-content:center;background:#e8e8e8">'+catSvg(a.cat,18,'#888')+'</div>'}
