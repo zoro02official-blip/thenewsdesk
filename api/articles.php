@@ -25,6 +25,14 @@ try {
     $db->exec('ALTER TABLE articles ADD COLUMN IF NOT EXISTS last_edited DATETIME NULL DEFAULT NULL');
 } catch (\Exception $e) { /* already exists or unsupported — safe to ignore */ }
 
+// ── Ensure article IDs look large (start at 237891+) ─────
+try {
+    $ai = $db->query("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'articles'")->fetchColumn();
+    if ($ai !== false && (int)$ai < 237891) {
+        $db->exec("ALTER TABLE articles AUTO_INCREMENT = 237891");
+    }
+} catch (\Exception $e) { /* ignore if information_schema unavailable */ }
+
 // ── View count increment (public, no auth) ────────────────
 if ($method === 'POST' && $action === 'view' && $id > 0) {
     $db->prepare('UPDATE articles SET views = views + 1 WHERE id = ?')->execute([$id]);
@@ -157,49 +165,68 @@ if ($method === 'PUT') {
         $lastEditedVal2 = $existing['last_edited'] ?? null;
     }
 
-    $stmt = $db->prepare(
-        'UPDATE articles SET
-            title      = :title,
-            excerpt    = :exc,
-            content    = :body,
-            category   = :cat,
-            author     = :author,
-            image      = :img,
-            tags       = :tags,
-            published  = :pub,
-            featured   = :feat,
-            breaking   = :brk,
-            date       = :date,
-            last_edited= :last_edited
-         WHERE id = :id'
-    );
-    $stmt->execute([
-        // Fall back to existing value for any field not supplied in the payload
-        'title'       => isset($body['title'])  ? trim($body['title'])  : $existing['title'],
-        'exc'         => isset($body['exc'])    ? trim($body['exc'])    : $existing['excerpt'],
-        'body'        => isset($body['body'])   ? trim($body['body'])   : $existing['content'],
-        'cat'         => isset($body['cat'])    ? trim($body['cat'])    : $existing['category'],
-        'author'      => isset($body['author']) ? (trim($body['author']) ?: 'Staff Reporter') : $existing['author'],
-        'img'         => isset($body['img'])    ? trim($body['img'])    : $existing['image'],
-        'tags'        => isset($body['tags'])
-                             ? (is_array($body['tags']) ? implode(',', $body['tags']) : trim($body['tags']))
-                             : $existing['tags'],
-        'pub'         => isset($body['pub'])
-                             ? (int)(bool)$body['pub']
-                             : (isset($body['published']) ? (int)(bool)$body['published'] : (int)$existing['published']),
-        'feat'        => isset($body['feat'])
-                             ? (int)(bool)$body['feat']
-                             : (isset($body['featured']) ? (int)(bool)$body['featured'] : (int)$existing['featured']),
-        'brk'         => isset($body['brk'])
-                             ? (int)(bool)$body['brk']
-                             : (isset($body['breaking']) ? (int)(bool)$body['breaking'] : (int)$existing['breaking']),
+    // Merge supplied fields with existing values
+    $merged = [
+        'title'  => isset($body['title'])  ? trim($body['title'])  : $existing['title'],
+        'exc'    => isset($body['exc'])    ? trim($body['exc'])    : $existing['excerpt'],
+        'body'   => isset($body['body'])   ? trim($body['body'])   : $existing['content'],
+        'cat'    => isset($body['cat'])    ? trim($body['cat'])    : $existing['category'],
+        'author' => isset($body['author']) ? (trim($body['author']) ?: 'Staff Reporter') : $existing['author'],
+        'img'    => isset($body['img'])    ? trim($body['img'])    : $existing['image'],
+        'tags'   => isset($body['tags'])
+                        ? (is_array($body['tags']) ? implode(',', $body['tags']) : trim($body['tags']))
+                        : $existing['tags'],
+        'pub'    => isset($body['pub'])
+                        ? (int)(bool)$body['pub']
+                        : (isset($body['published']) ? (int)(bool)$body['published'] : (int)$existing['published']),
+        'feat'   => isset($body['feat'])
+                        ? (int)(bool)$body['feat']
+                        : (isset($body['featured']) ? (int)(bool)$body['featured'] : (int)$existing['featured']),
+        'brk'    => isset($body['brk'])
+                        ? (int)(bool)$body['brk']
+                        : (isset($body['breaking']) ? (int)(bool)$body['breaking'] : (int)$existing['breaking']),
         'date'        => $dateVal,
         'last_edited' => $lastEditedVal2,
-        'id'          => $id,
-    ]);
+        'views'       => (int)($existing['views'] ?? 0),
+    ];
 
-    $fetchSt = $db->prepare('SELECT * FROM articles WHERE id = ?');
-    $fetchSt->execute([$id]);
+    // Full edit (has title/body fields) → delete old row, insert fresh to get new ascending ID
+    // Simple toggle (only pub flag) → plain UPDATE to avoid churning the URL
+    $isFullEdit = isset($body['title']) || isset($body['body']) || isset($body['exc']);
+
+    if ($isFullEdit) {
+        $db->prepare('DELETE FROM articles WHERE id = ?')->execute([$id]);
+        $ins = $db->prepare(
+            'INSERT INTO articles (title, excerpt, content, category, author, image, tags, published, featured, breaking, date, last_edited, views)
+             VALUES (:title, :exc, :body, :cat, :author, :img, :tags, :pub, :feat, :brk, :date, :last_edited, :views)'
+        );
+        $ins->execute($merged);
+        $newId = (int)$db->lastInsertId();
+        $fetchSt = $db->prepare('SELECT * FROM articles WHERE id = ?');
+        $fetchSt->execute([$newId]);
+    } else {
+        // Toggle-publish or other minor flag update — keep same ID
+        $stmt = $db->prepare(
+            'UPDATE articles SET
+                title      = :title,
+                excerpt    = :exc,
+                content    = :body,
+                category   = :cat,
+                author     = :author,
+                image      = :img,
+                tags       = :tags,
+                published  = :pub,
+                featured   = :feat,
+                breaking   = :brk,
+                date       = :date,
+                last_edited= :last_edited
+             WHERE id = :id'
+        );
+        $stmt->execute(array_merge($merged, ['id' => $id]));
+        $fetchSt = $db->prepare('SELECT * FROM articles WHERE id = ?');
+        $fetchSt->execute([$id]);
+    }
+
     echo json_encode(['success' => true, 'article' => formatArticle($fetchSt->fetch())]);
     exit;
 }
