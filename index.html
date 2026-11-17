@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <meta name="dmca-site-verification" content="Qjc3QWlWNmJNbGRnT0JqNEc5Mm9sK3RwbXdkaEdicjd6WmJjVHlhU3BVND01"/>
 <title>The News Desk</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
@@ -189,7 +189,7 @@ nav{display:none!important}
 .art-avatar{width:36px;height:36px;background:linear-gradient(135deg,var(--crimson),var(--crimson-dark));border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:700;flex-shrink:0}
 .art-byline-name{font-weight:600;color:var(--txt);font-size:13px}
 .art-byline-meta{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--txt3);margin-top:2px;flex-wrap:wrap}
-.art-hero-img{width:100%;height:360px;max-height:360px;object-fit:cover;object-position:center;display:block;margin-bottom:8px;border-radius:2px}
+.art-hero-img{width:100%;height:260px;max-height:260px;object-fit:cover;object-position:center;display:block;margin-bottom:8px;border-radius:2px}
 .art-hero-video{width:100%;max-height:480px;margin-bottom:8px;display:block}
 .art-img-cap{font-size:12px;color:var(--txt3);font-style:italic;margin-bottom:28px;padding:0 4px}
 /* ARTICLE CONTENT */
@@ -650,6 +650,14 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
         </div>
         <div class="art-cat-row" id="artCatRow"></div>
         <h1 class="art-headline" id="artHeadline"></h1>
+        <div class="art-copyright">
+          <a href="https://www.dmca.com/Protection/Status.aspx" target="_blank" rel="noopener" class="art-dmca-badge">
+            <img src="dmca-badge.webp" alt="DMCA.com Protection Status"/>
+          </a>
+          <div class="art-copyright-text">
+            <strong>COPYRIGHT NOTICE:</strong> This material is the exclusive property of <strong>THE NEWS DESK / CHRIS MORGAN</strong>. Unauthorized reproduction strictly prohibited. Report violations to <a class="copyright-email-link" href="mailto:copyright@thenewsdesk.space">copyright@thenewsdesk.space</a>.
+          </div>
+        </div>
         <p class="art-dek" id="artDek"></p>
         <div class="art-byline">
           <div class="art-byline-left">
@@ -2314,6 +2322,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (e.key === 'Escape') closeDrawer();
   });
 });
+// Prevent Ctrl+scroll zoom
+window.addEventListener('wheel', function(e){ if(e.ctrlKey){ e.preventDefault(); } }, { passive: false });
+window.addEventListener('keydown', function(e){ if(e.ctrlKey && (e.key==='+' || e.key==='-' || e.key==='=' || e.key==='0')){ e.preventDefault(); } });
 </script>
 </body>
 </html>
