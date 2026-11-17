@@ -1879,15 +1879,15 @@ function cardHtml(a) {
   var imgPart = a.img && isVideo(a.img)
     ? '<div class="card-vid-wrap"><video src="'+esc(a.img)+'" preload="metadata" muted playsinline onloadedmetadata="this.currentTime=1" onerror="_cardVidErr(this)"></video></div>'
     : a.img
-      ? '<img src="'+esc(a.img)+'" alt="'+esc(a.title)+'" loading="lazy" onerror="this.style.display='none'" />'
+      ? '<img src="'+esc(a.img)+'" alt="'+esc(a.title)+'" loading="lazy" onerror="this.hidden=true"/>'
       : imgText;
-  var tags = (a.tags||[]).slice(0,3).map(function(t){return '<span class="tag-pill" onclick="event.stopPropagation();openTagSearch(''+esc(t)+'')">'+esc(t)+'</span>';}).join('');
+  var tags = (a.tags||[]).slice(0,3).map(function(t){return '<span class="tag-pill" data-tag="'+esc(t)+'" onclick="event.stopPropagation();openTagSearch(this.dataset.tag)">'+esc(t)+'</span>';}).join('');
   var breaking = a.breaking ? '<span class="breaking-badge" style="margin-bottom:6px;display:inline-flex"><span class="breaking-dot"></span>Breaking</span>' : '';
   return '<div class="card" onclick="openArticle('+a.id+')">'+
     '<div class="card-img">'+imgPart+'</div>'+
     '<div class="card-body">'+
     breaking+
-    '<div class="card-cat" onclick="event.stopPropagation();setNav(''+esc(a.cat)+'')">'+esc(a.cat)+'</div>'+
+    '<div class="card-cat" data-cat="'+esc(a.cat)+'" onclick="event.stopPropagation();setNav(this.dataset.cat)">'+esc(a.cat)+'</div>'+
     '<div class="card-title">'+esc(a.title)+'</div>'+
     '<div class="card-exc">'+esc(a.exc||'')+'</div>'+
     '<div class="card-footer"><span class="card-date">'+fmtDateShort(a.date)+'</span></div>'+
