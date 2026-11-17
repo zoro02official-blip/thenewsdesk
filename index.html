@@ -465,6 +465,13 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
 .admin-btn-pub{color:#34d399;border-color:#34d399}.admin-btn-pub:hover{background:#34d399;color:#000}
 .admin-btn-unpub{color:#f59e0b;border-color:#f59e0b}.admin-btn-unpub:hover{background:#f59e0b;color:#000}
 .admin-btn-del{color:#f87171;border-color:#f87171}.admin-btn-del:hover{background:#f87171;color:#fff}
+.admin-search-bar{display:flex;align-items:center;gap:10px;padding:0 24px 16px;margin-top:-4px}
+.admin-search-bar input{flex:1;background:#1a1a1a;border:1px solid #374151;color:#f3f4f6;padding:9px 14px;font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
+.admin-search-bar input:focus{border-color:var(--crimson)}
+.admin-search-bar input::placeholder{color:#6b7280}
+.admin-search-clear{background:none;border:none;color:#6b7280;cursor:pointer;font-size:16px;padding:4px;line-height:1;display:none}
+.admin-search-clear.visible{display:block}
+.admin-search-clear:hover{color:#f3f4f6}
 .admin-btn-copy{color:#60a5fa;border-color:#60a5fa}.admin-btn-copy:hover{background:#60a5fa;color:#000}
 /* INLINE CONFIRM */
 .inline-confirm{display:inline-flex;align-items:center;gap:6px;background:rgba(248,113,113,.1);border:1px solid #f87171;padding:3px 8px;border-radius:2px}
@@ -1560,7 +1567,7 @@ async function saveArticle() {
     renderHome();
     resetForm();
     adminTab('articles');
-    renderAdminArticlesTable();
+    renderAdminArticlesTable(false);
     updateDashStats();
   } catch(e) {
     showToast(e.message || 'Save failed', 'error');
@@ -1581,7 +1588,7 @@ async function togglePublish(id) {
       body: JSON.stringify({id, pub: a.published ? 0 : 1})
     });
     await loadArticles();
-    renderAdminArticlesTable();
+    renderAdminArticlesTable(true);
     renderRecentAdminTable();
     updateDashStats();
     showToast(a.published ? 'Moved to draft' : 'Published', 'ok');
@@ -1593,7 +1600,7 @@ async function deleteArticle(id) {
   try {
     await apiFetch('/api/articles.php?id=' + id, {method:'DELETE'});
     await loadArticles();
-    renderAdminArticlesTable();
+    renderAdminArticlesTable(true);
     renderRecentAdminTable();
     updateDashStats();
     showToast('Article deleted', 'ok');
@@ -2334,13 +2341,53 @@ function renderRecentAdminTable() {
   el.innerHTML = items.map(a=>adminRowHtml(a)).join('');
 }
 
-function renderAdminArticlesTable() {
+function renderAdminArticlesTable(preserveSearch) {
   const el = document.getElementById('allArticlesTable');
   if (!el) return;
   // Only show real DB articles in the management panel (demo articles have ID >= 9000)
   const real = articles.filter(a=>a.id<9000);
+  const prevQuery = preserveSearch ? (document.getElementById('adminSearchInput')?.value || '') : '';
   if (!real.length) { el.innerHTML='<div class="table-wrap"><div class="empty-table">No articles yet. <span style="color:var(--crimson);cursor:pointer" onclick="adminTab(\'new\')">Add one →</span></div></div>'; return; }
-  el.innerHTML = '<div class="table-wrap"><div class="table-head"><h3>All Articles ('+real.length+')</h3><span onclick="adminTab(\'new\')" style="font-size:12px;color:var(--crimson);cursor:pointer;font-weight:600">+ New Article</span></div><div style="padding:0 24px 8px">'+real.map(a=>adminRowHtml(a)).join('')+'</div></div>';
+  el.innerHTML = `<div class="table-wrap">
+    <div class="table-head">
+      <h3 id="adminArticleCount">All Articles (${real.length})</h3>
+      <span onclick="adminTab('new')" style="font-size:12px;color:var(--crimson);cursor:pointer;font-weight:600">+ New Article</span>
+    </div>
+    <div class="admin-search-bar">
+      <input id="adminSearchInput" type="search" placeholder="Search by title, author, category or tag…" oninput="filterAdminArticles()" value="${esc(prevQuery)}"/>
+      <button class="admin-search-clear${prevQuery?' visible':''}" id="adminSearchClear" onclick="clearAdminSearch()" title="Clear search">✕</button>
+    </div>
+    <div id="adminArticleRows" style="padding:0 24px 8px">${real.map(a=>adminRowHtml(a)).join('')}</div>
+  </div>`;
+  if (prevQuery) filterAdminArticles();
+}
+
+function filterAdminArticles() {
+  const input = document.getElementById('adminSearchInput');
+  const clearBtn = document.getElementById('adminSearchClear');
+  const rowsEl = document.getElementById('adminArticleRows');
+  const countEl = document.getElementById('adminArticleCount');
+  if (!input || !rowsEl) return;
+  const q = input.value.trim().toLowerCase();
+  clearBtn && (clearBtn.className = 'admin-search-clear' + (q ? ' visible' : ''));
+  const real = articles.filter(a=>a.id<9000);
+  const filtered = q ? real.filter(a =>
+    (a.title||'').toLowerCase().includes(q) ||
+    (a.author||'').toLowerCase().includes(q) ||
+    (a.cat||'').toLowerCase().includes(q) ||
+    (Array.isArray(a.tags)?a.tags:((a.tags||'')+'').split(',')).some(t=>(t+'').toLowerCase().includes(q))
+  ) : real;
+  if (countEl) countEl.textContent = q ? `${filtered.length} of ${real.length} Articles` : `All Articles (${real.length})`;
+  if (!filtered.length) {
+    rowsEl.innerHTML = `<div style="padding:24px;text-align:center;color:#6b7280;font-size:13px">No articles match "<strong style="color:#f3f4f6">${esc(q)}</strong>"</div>`;
+  } else {
+    rowsEl.innerHTML = filtered.map(a=>adminRowHtml(a)).join('');
+  }
+}
+
+function clearAdminSearch() {
+  const input = document.getElementById('adminSearchInput');
+  if (input) { input.value = ''; filterAdminArticles(); input.focus(); }
 }
 
 function adminRowHtml(a) {
