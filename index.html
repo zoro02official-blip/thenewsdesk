@@ -2279,7 +2279,7 @@ function toggleMoreInfo() {
 }
 
 function copyArticleLink(id) {
-  const url = window.location.origin + window.location.pathname + '?article=' + id;
+  const url = window.location.origin + window.location.pathname + '#article-' + id;
   navigator.clipboard.writeText(url).then(()=>{
     const btn = document.querySelector(`button[onclick="copyArticleLink(${id})"]`);
     if (btn) { const orig = btn.textContent; btn.textContent='✓ Copied'; setTimeout(()=>{ btn.textContent=orig; }, 1800); }
