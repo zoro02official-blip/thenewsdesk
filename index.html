@@ -1891,7 +1891,7 @@ async function openArticle(id, pushStack=true) {
       const editDt = new Date(a.last_edited);
       infoEditEl.textContent = !isNaN(editDt) ? fmtDate(a.last_edited) + ', ' + editDt.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}) : a.last_edited;
     } else {
-      infoEditEl.textContent = '—';
+      infoEditEl.textContent = 'Not set';
     }
   }
   const infoPanelEl = document.getElementById('artMoreInfoPanel');
