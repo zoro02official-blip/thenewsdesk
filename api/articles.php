@@ -23,6 +23,7 @@ $db     = getDB();
 // One-time migration: add last_edited column if it doesn't exist
 try {
     $db->exec('ALTER TABLE articles ADD COLUMN IF NOT EXISTS last_edited DATETIME NULL DEFAULT NULL');
+    $db->exec('ALTER TABLE articles ADD COLUMN IF NOT EXISTS copyright_email VARCHAR(255) NULL DEFAULT NULL');
 } catch (\Exception $e) { /* already exists or unsupported — safe to ignore */ }
 
 // ── Ensure article IDs look large (start at 237891+) ─────
@@ -104,8 +105,8 @@ if ($method === 'POST') {
     }
 
     $stmt = $db->prepare(
-        'INSERT INTO articles (title, excerpt, content, category, author, image, tags, published, featured, breaking, date, last_edited)
-         VALUES (:title, :exc, :body, :cat, :author, :img, :tags, :pub, :feat, :brk, :date, :last_edited)'
+        'INSERT INTO articles (title, excerpt, content, category, author, image, tags, published, featured, breaking, date, last_edited, copyright_email)
+         VALUES (:title, :exc, :body, :cat, :author, :img, :tags, :pub, :feat, :brk, :date, :last_edited, :copyright_email)'
     );
     $stmt->execute([
         'title'      => $title,
@@ -118,8 +119,9 @@ if ($method === 'POST') {
         'pub'        => isset($body['pub']) ? (int)(bool)$body['pub'] : (isset($body['published']) ? (int)(bool)$body['published'] : 1),
         'feat'       => (int)(bool)($body['feat']    ?? $body['featured'] ?? false),
         'brk'        => (int)(bool)($body['brk']     ?? $body['breaking'] ?? false),
-        'date'       => $dateVal,
-        'last_edited'=> $lastEditedVal,
+        'date'            => $dateVal,
+        'last_edited'     => $lastEditedVal,
+        'copyright_email' => trim($body['copyright_email'] ?? '') ?: null,
     ]);
 
     $newId   = (int)$db->lastInsertId();
@@ -185,9 +187,12 @@ if ($method === 'PUT') {
         'brk'    => isset($body['brk'])
                         ? (int)(bool)$body['brk']
                         : (isset($body['breaking']) ? (int)(bool)$body['breaking'] : (int)$existing['breaking']),
-        'date'        => $dateVal,
-        'last_edited' => $lastEditedVal2,
-        'views'       => (int)($existing['views'] ?? 0),
+        'date'            => $dateVal,
+        'last_edited'     => $lastEditedVal2,
+        'views'           => (int)($existing['views'] ?? 0),
+        'copyright_email' => isset($body['copyright_email'])
+                                ? (trim($body['copyright_email']) ?: null)
+                                : ($existing['copyright_email'] ?? null),
     ];
 
     // Full edit (has title/body fields) → delete old row, insert fresh to get new ascending ID
@@ -197,8 +202,8 @@ if ($method === 'PUT') {
     if ($isFullEdit) {
         $db->prepare('DELETE FROM articles WHERE id = ?')->execute([$id]);
         $ins = $db->prepare(
-            'INSERT INTO articles (title, excerpt, content, category, author, image, tags, published, featured, breaking, date, last_edited, views)
-             VALUES (:title, :exc, :body, :cat, :author, :img, :tags, :pub, :feat, :brk, :date, :last_edited, :views)'
+            'INSERT INTO articles (title, excerpt, content, category, author, image, tags, published, featured, breaking, date, last_edited, views, copyright_email)
+             VALUES (:title, :exc, :body, :cat, :author, :img, :tags, :pub, :feat, :brk, :date, :last_edited, :views, :copyright_email)'
         );
         $ins->execute($merged);
         $newId = (int)$db->lastInsertId();
@@ -219,8 +224,9 @@ if ($method === 'PUT') {
                 featured   = :feat,
                 breaking   = :brk,
                 date       = :date,
-                last_edited= :last_edited
-             WHERE id = :id'
+                last_edited= :last_edited,
+            copyright_email= :copyright_email
+         WHERE id = :id'
         );
         $stmt->execute(array_merge($merged, ['id' => $id]));
         $fetchSt = $db->prepare('SELECT * FROM articles WHERE id = ?');
@@ -597,7 +603,8 @@ function formatArticle(array $row): array {
         'published'   => (bool)($row['published'] ?? true),   // ← fixed: use actual DB value
         'featured'    => (bool)$row['featured'],
         'breaking'    => (bool)$row['breaking'],
-        'views'       => (int)$row['views'],
+        'views'           => (int)$row['views'],
+        'copyright_email' => $row['copyright_email'] ?? null,
     ];
 }
 

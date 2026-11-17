@@ -1257,6 +1257,11 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
           <label class="form-label">Tags <span style="color:#4b5563;font-weight:400;text-transform:none;letter-spacing:0">(comma-separated)</span></label>
           <input class="form-input" id="fTags" placeholder="e.g. Politics, Election, Breaking News"/>
         </div>
+        <div class="form-group">
+          <label class="form-label">Copyright Email <span style="color:#4b5563;font-weight:400;text-transform:none;letter-spacing:0">(for this article's DMCA notice)</span></label>
+          <input class="form-input" id="fCopyrightEmail" type="email" placeholder="copyright@thenewsdesk.space — leave blank to use site default"/>
+          <div class="form-hint">Override the copyright contact email shown in this article's DMCA box. Leave empty to use the global site default.</div>
+        </div>
         <div class="form-checks">
           <label class="form-check"><input type="checkbox" id="fPublished" checked/> Published</label>
           <label class="form-check"><input type="checkbox" id="fFeatured"/> Featured</label>
@@ -1513,8 +1518,9 @@ async function saveArticle() {
       pub:         document.getElementById('fPublished').checked ? 1 : 0,
       feat:        document.getElementById('fFeatured').checked  ? 1 : 0,
       brk:         document.getElementById('fBreaking').checked  ? 1 : 0,
-      date:        dateVal        ? dateVal.replace('T',' ')        + ':00' : undefined,
-      last_edited: lastEditedVal  ? lastEditedVal.replace('T',' ')  + ':00' : null
+      date:            dateVal        ? dateVal.replace('T',' ')        + ':00' : undefined,
+      last_edited:     lastEditedVal  ? lastEditedVal.replace('T',' ')  + ':00' : null,
+      copyright_email: document.getElementById('fCopyrightEmail').value.trim() || null
     };
 
     if (editingId) {
@@ -2032,6 +2038,13 @@ async function openArticle(id, pushStack=true) {
   document.getElementById('artBylineName').textContent = a.author || 'Staff Reporter';
   document.getElementById('artBylineMeta').innerHTML = `<span>${bio.role}</span><span>·</span><span>${fmtDate(a.date)}</span>`;
 
+  // Per-article copyright email (fall back to global setting)
+  const artEmail = (a.copyright_email || '').trim() || getCopyrightEmail();
+  document.querySelectorAll('.copyright-email-link').forEach(el=>{
+    el.href = 'mailto:' + artEmail;
+    el.textContent = artEmail;
+  });
+
   // Populate More Info panel
   const infoPubEl  = document.getElementById('artInfoPublished');
   const infoEditEl = document.getElementById('artInfoLastEdited');
@@ -2388,6 +2401,8 @@ function editArticle(id) {
   } else {
     document.getElementById('fLastEdited').value = '';
   }
+  // Copyright email
+  document.getElementById('fCopyrightEmail').value = a.copyright_email || '';
   // Clear media input + preview
   document.getElementById('fMedia').value = '';
   document.getElementById('uploadAreaText').textContent = 'Click to choose image or video file';
@@ -2403,7 +2418,7 @@ function resetForm() {
   document.getElementById('formSub').textContent   = 'Fill in the details below to create a new story';
   document.getElementById('saveLabel').textContent = 'Save Article';
   document.getElementById('cancelEdit').style.display='none';
-  ['fTitle','fExc','fAuthor','fImg','fTags','fLastEdited'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  ['fTitle','fExc','fAuthor','fImg','fTags','fLastEdited','fCopyrightEmail'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
   // Pre-fill date with current datetime so admin controls the publish date
   (function(){const fDate=document.getElementById('fDate'); if(!fDate) return; const now=new Date(); const pad=n=>String(n).padStart(2,'0'); fDate.value=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate())+'T'+pad(now.getHours())+':'+pad(now.getMinutes());}());
   quill.setContents([]);
