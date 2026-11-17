@@ -1879,7 +1879,7 @@ function cardHtml(a) {
   const imgPart = a.img && isVideo(a.img)
     ? `<div class="card-vid-wrap"><video src="${esc(a.img)}" preload="metadata" muted playsinline onloadedmetadata="this.currentTime=1" onerror="_cardVidErr(this)"></video></div>`
     : a.img
-      ? `<img src="${esc(a.img)}" alt="${esc(a.title)}" loading="lazy" onerror="this.style.display='none';var ph=document.createElement('div');ph.className='card-img-text';ph.innerHTML='<div class=&quot;cit-cat&quot;>${esc(a.cat).replace(/'/g,&#39;)}</div><div class=&quot;cit-title&quot;>${esc(a.title).replace(/'/g,&#39;)}</div>';this.parentNode.insertBefore(ph,this.nextSibling)"/>`
+      ? `<img src="${esc(a.img)}" alt="${esc(a.title)}" loading="lazy" data-cat="${esc(a.cat)}" data-title="${esc(a.title)}" loading="lazy" onerror="this.style.display='none';var ph=document.createElement('div');ph.className='card-img-text';ph.innerHTML='<div class=\'cit-cat\'>'+this.dataset.cat+'</div><div class=\'cit-title\'>'+this.dataset.title+'</div>';this.parentNode.insertBefore(ph,this.nextSibling)"/>`
       : TEXT_PH;
   const tags = (a.tags||[]).slice(0,3).map(t=>`<span class="tag-pill" onclick="event.stopPropagation();openTagSearch('${esc(t)}')">${esc(t)}</span>`).join('');
   return `<div class="card" onclick="openArticle(${a.id})">
