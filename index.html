@@ -102,7 +102,7 @@ nav{display:none!important}
 .breaking-dot{width:5px;height:5px;background:#fff;border-radius:50%;animation:blink 1s infinite;flex-shrink:0}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
 /* HERO */
-.hero{position:relative;height:500px;overflow:hidden;background:var(--charcoal);cursor:pointer}
+.hero{position:relative;height:500px;overflow:hidden;background:var(--charcoal);background-image:url('https://images.unsplash.com/photo-1495020689067-958852a7765e?w=1200&auto=format&fit=crop');background-size:cover;background-position:center top;cursor:pointer}
 .hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,#1a1a1a 0%,#2d1a1a 50%,#1a1a2d 100%)}
 .hero-pattern{position:absolute;inset:0;opacity:.04;background-image:repeating-linear-gradient(0deg,transparent,transparent 50px,#fff 50px,#fff 51px),repeating-linear-gradient(90deg,transparent,transparent 50px,#fff 50px,#fff 51px)}
 .hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35}
@@ -505,8 +505,8 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
 .np-left,.np-right{padding:24px 20px;background:var(--bg2)}
 .np-left{border-right:1px solid var(--border)}
 .np-right{border-left:1px solid var(--border)}
-.np-center{display:block}
-.np-center .hero{height:360px;max-height:360px;min-height:360px}
+.np-center{display:flex;flex-direction:column}
+.np-center .hero{flex:0 0 340px;min-height:320px;max-height:380px}
 .np-front{align-items:start}
 .np-col-head{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:var(--charcoal);padding-bottom:10px;border-bottom:2px solid var(--charcoal);margin-bottom:16px}
 /* popular widget overrides in left col */
