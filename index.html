@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="dmca-site-verification" content="Qjc3QWlWNmJNbGRnT0JqNEc5Mm9sK3RwbXdkaEdicjd6WmJjVHlhU3BVND01"/>
 <title>The News Desk</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
@@ -167,7 +167,7 @@ nav{display:none!important}
 .social-platform{display:flex;align-items:center;gap:10px}
 .social-icon{width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 /* ARTICLE VIEW */
-.art-view{max-width:100%;margin:0 auto;padding:40px clamp(8px,1.5vw,20px)}
+.art-view{max-width:1200px;margin:0 auto;padding:40px clamp(8px,1.5vw,20px)}
 .art-layout{display:grid;grid-template-columns:1fr 320px;gap:56px;align-items:start}
 .art-back{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--charcoal-med);cursor:pointer;margin-bottom:28px;transition:color .2s}
 .art-back:hover{color:var(--crimson)}
@@ -189,8 +189,8 @@ nav{display:none!important}
 .art-avatar{width:36px;height:36px;background:linear-gradient(135deg,var(--crimson),var(--crimson-dark));border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:700;flex-shrink:0}
 .art-byline-name{font-weight:600;color:var(--txt);font-size:13px}
 .art-byline-meta{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--txt3);margin-top:2px;flex-wrap:wrap}
-.art-hero-img{width:100%;height:260px;max-height:260px;object-fit:cover;object-position:center;display:block;margin-bottom:8px;border-radius:2px}
-.art-hero-video{width:100%;max-height:480px;margin-bottom:8px;display:block}
+.art-hero-img{width:100%;height:auto;max-height:400px;object-fit:cover;object-position:center;display:block;margin-bottom:8px;border-radius:2px}
+.art-hero-video{width:100%;max-height:400px;margin-bottom:8px;display:block}
 .art-img-cap{font-size:12px;color:var(--txt3);font-style:italic;margin-bottom:28px;padding:0 4px}
 /* ARTICLE CONTENT */
 .article-content{font-size:17px;line-height:1.85;color:#222}
@@ -436,6 +436,13 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
 @media(max-width:420px){.header-top{padding:10px 12px}.logo-name{font-size:22px}.hdr-right{gap:6px}.main{padding:20px 12px}.art-view{padding:16px 12px}}
 /* ── ARTICLE FULL SHARE BAR ── */
 .art-share-full{margin:28px 0 0;padding:20px 24px;background:var(--bg3);border:1px solid var(--border);border-radius:2px}
+.art-moreinfo-btn{background:none;border:1px solid var(--border2);border-radius:4px;padding:4px 10px;font-size:11px;color:var(--txt2);cursor:pointer;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;font-family:inherit}
+.art-moreinfo-btn:hover{border-color:var(--crimson);color:var(--crimson)}
+.art-moreinfo-panel{display:none;background:#f8f9fa;border:1px solid var(--border);border-radius:6px;padding:12px 16px;margin-bottom:12px;font-size:12px;color:var(--txt2);line-height:1.6}
+.art-moreinfo-panel.show{display:block}
+.art-moreinfo-row{display:flex;gap:8px;margin-bottom:4px}
+.art-moreinfo-row:last-child{margin-bottom:0}
+.art-moreinfo-label{font-weight:600;color:var(--txt);min-width:110px;flex-shrink:0}
 .asf-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--charcoal-med);margin-bottom:12px}
 .asf-share-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .asf-share-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:var(--crimson);color:#fff;border:none;border-radius:3px;font-size:13px;font-weight:600;cursor:pointer;letter-spacing:.03em;transition:background .15s,transform .1s}
@@ -667,7 +674,17 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
               <div class="art-byline-meta" id="artBylineMeta"></div>
             </div>
           </div>
-          <div class="share-bar" id="artShareBar"></div>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <button class="art-moreinfo-btn" id="artMoreInfoBtn" onclick="toggleMoreInfo()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              More Info
+            </button>
+            <div class="share-bar" id="artShareBar"></div>
+          </div>
+        </div>
+        <div class="art-moreinfo-panel" id="artMoreInfoPanel">
+          <div class="art-moreinfo-row"><span class="art-moreinfo-label">Published:</span><span id="artInfoPublished">—</span></div>
+          <div class="art-moreinfo-row"><span class="art-moreinfo-label">Last Edited:</span><span id="artInfoLastEdited">—</span></div>
         </div>
         <img class="art-hero-img" id="artHeroImg" src="" alt="" style="display:none"/>
         <video class="art-hero-video" id="artHeroVideo" controls style="display:none"></video>
@@ -1109,6 +1126,11 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
           <div class="form-hint">This date appears in the article byline — change it to control the publish date shown to readers</div>
         </div>
         <div class="form-group">
+          <label class="form-label">Last Edited Date</label>
+          <input class="form-input" id="fLastEdited" type="datetime-local"/>
+          <div class="form-hint">Optional. Leave blank for no last-edited date. Shown in the article's More Info panel.</div>
+        </div>
+        <div class="form-group">
           <label class="form-label">Image URL <span style="color:#4b5563;font-weight:400;text-transform:none;letter-spacing:0">(or upload below)</span></label>
           <input class="form-input" id="fImg" placeholder="https://picsum.photos/seed/yourkey/800/450 — or upload a file below"/>
           <div class="form-hint">Paste a URL here, or use the upload area below to pick a file from your device.</div>
@@ -1376,18 +1398,20 @@ async function saveArticle() {
     }
 
     const dateVal = document.getElementById('fDate').value;
+    const lastEditedVal = document.getElementById('fLastEdited').value;
     const payload = {
       title,
-      exc:   document.getElementById('fExc').value.trim(),
-      body:  quill.root.innerHTML.trim(),
+      exc:         document.getElementById('fExc').value.trim(),
+      body:        quill.root.innerHTML.trim(),
       cat,
-      author: document.getElementById('fAuthor').value.trim() || 'Staff Reporter',
-      img:   imgUrl,
-      tags:  document.getElementById('fTags').value.trim(),
-      pub:   document.getElementById('fPublished').checked ? 1 : 0,
-      feat:  document.getElementById('fFeatured').checked  ? 1 : 0,
-      brk:   document.getElementById('fBreaking').checked  ? 1 : 0,
-      date:  dateVal ? dateVal.replace('T',' ') + ':00' : undefined
+      author:      document.getElementById('fAuthor').value.trim() || 'Staff Reporter',
+      img:         imgUrl,
+      tags:        document.getElementById('fTags').value.trim(),
+      pub:         document.getElementById('fPublished').checked ? 1 : 0,
+      feat:        document.getElementById('fFeatured').checked  ? 1 : 0,
+      brk:         document.getElementById('fBreaking').checked  ? 1 : 0,
+      date:        dateVal        ? dateVal.replace('T',' ')        + ':00' : undefined,
+      last_edited: lastEditedVal  ? lastEditedVal.replace('T',' ')  + ':00' : null
     };
 
     if (editingId) {
@@ -1855,6 +1879,24 @@ async function openArticle(id, pushStack=true) {
   document.getElementById('artBylineName').textContent = a.author || 'Staff Reporter';
   document.getElementById('artBylineMeta').innerHTML = `<span>${bio.role}</span><span>·</span><span>${fmtDate(a.date)}</span>`;
 
+  // Populate More Info panel
+  const infoPubEl  = document.getElementById('artInfoPublished');
+  const infoEditEl = document.getElementById('artInfoLastEdited');
+  if (infoPubEl) {
+    const pubDt = a.date ? new Date(a.date) : null;
+    infoPubEl.textContent = pubDt && !isNaN(pubDt) ? fmtDate(a.date) + ', ' + pubDt.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}) : '—';
+  }
+  if (infoEditEl) {
+    if (a.last_edited) {
+      const editDt = new Date(a.last_edited);
+      infoEditEl.textContent = !isNaN(editDt) ? fmtDate(a.last_edited) + ', ' + editDt.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}) : a.last_edited;
+    } else {
+      infoEditEl.textContent = 'Not set';
+    }
+  }
+  const infoPanelEl = document.getElementById('artMoreInfoPanel');
+  if (infoPanelEl) infoPanelEl.classList.remove('show');
+
   // Hero image / video
   const heroImg = document.getElementById('artHeroImg');
   const heroVid = document.getElementById('artHeroVideo');
@@ -2168,6 +2210,18 @@ function editArticle(id) {
       }
     } catch(e){}
   }
+  // Set last_edited datetime-local
+  if (a.last_edited) {
+    try {
+      const dt2 = new Date(a.last_edited);
+      if (!isNaN(dt2)) {
+        const pad = n=>String(n).padStart(2,'0');
+        document.getElementById('fLastEdited').value = dt2.getFullYear()+'-'+pad(dt2.getMonth()+1)+'-'+pad(dt2.getDate())+'T'+pad(dt2.getHours())+':'+pad(dt2.getMinutes());
+      }
+    } catch(e){}
+  } else {
+    document.getElementById('fLastEdited').value = '';
+  }
   // Clear media input + preview
   document.getElementById('fMedia').value = '';
   document.getElementById('uploadAreaText').textContent = 'Click to choose image or video file';
@@ -2183,7 +2237,7 @@ function resetForm() {
   document.getElementById('formSub').textContent   = 'Fill in the details below to create a new story';
   document.getElementById('saveLabel').textContent = 'Save Article';
   document.getElementById('cancelEdit').style.display='none';
-  ['fTitle','fExc','fAuthor','fImg','fTags'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  ['fTitle','fExc','fAuthor','fImg','fTags','fLastEdited'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
   // Pre-fill date with current datetime so admin controls the publish date
   (function(){const fDate=document.getElementById('fDate'); if(!fDate) return; const now=new Date(); const pad=n=>String(n).padStart(2,'0'); fDate.value=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate())+'T'+pad(now.getHours())+':'+pad(now.getMinutes());}());
   quill.setContents([]);
@@ -2202,6 +2256,12 @@ function resetForm() {
 }
 
 function cancelEdit() { resetForm(); adminTab('articles'); }
+
+function toggleMoreInfo() {
+  const panel = document.getElementById('artMoreInfoPanel');
+  if (!panel) return;
+  panel.classList.toggle('show');
+}
 
 // ─── Category auto-detect ───────────────────────────────
 const CAT_KEYWORDS = {
@@ -2334,9 +2394,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (e.key === 'Escape') closeDrawer();
   });
 });
-// Prevent Ctrl+scroll zoom
-window.addEventListener('wheel', function(e){ if(e.ctrlKey){ e.preventDefault(); } }, { passive: false });
-window.addEventListener('keydown', function(e){ if(e.ctrlKey && (e.key==='+' || e.key==='-' || e.key==='=' || e.key==='0')){ e.preventDefault(); } });
 </script>
 </body>
 </html>
