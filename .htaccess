@@ -1,5 +1,16 @@
 # The News Desk — Apache config for Hostinger shared hosting
 
+# ── SPA routing — serve index.html for /article/{id} paths ───
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  # Pass real files and directories through unchanged
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  # Route /article/123 (and /article/123/) to index.html
+  RewriteRule ^article/([0-9]+)/?$ /index.html [L,QSA]
+</IfModule>
+
 # ── Prevent browsers from caching index.html ──────────────────
 <FilesMatch "^index\.html$">
   Header set Cache-Control "no-cache, no-store, must-revalidate"

@@ -1765,9 +1765,23 @@ function castPoll(el, pct) {
 
 // NAVIGATION
 // ═══════════════════════════════════════════
+
+// Handle browser back/forward with clean /article/ID URLs
+window.addEventListener('popstate', async function(e) {
+  const pathMatch = window.location.pathname.match(/^\/article\/(\d+)\/?$/);
+  if (pathMatch) {
+    await openArticle(parseInt(pathMatch[1]), false);
+  } else {
+    // navigated back to / or any non-article path → go home
+    currentView='home'; currentCat=null; currentArticleId=null; viewStack=[];
+    showView('home');
+    updateNav('all');
+  }
+});
+
 function goHome() {
   currentView='home'; currentCat=null; currentArticleId=null; viewStack=[];
-  history.replaceState(null, '', window.location.pathname);
+  history.pushState(null, '', '/');
   showView('home');
   updateNav('all');
 }
@@ -2076,11 +2090,11 @@ async function openArticle(id, pushStack=true) {
     tagsRow.style.display='';
   } else { tagsRow.style.display='none'; }
 
-  // Hash routing — update URL so each article has a shareable link
-  history.replaceState(null, '', '#article-' + id);
+  // Clean URL routing — update URL so each article has a shareable link
+  history.pushState({view:'article', id:id}, '', '/article/' + id);
 
   // Full share bar (above author bio)
-  const pageUrl = window.location.origin + window.location.pathname + '#article-' + id;
+  const pageUrl = window.location.origin + '/article/' + id;
   const asfEl = document.getElementById('artShareFull');
   if (asfEl) {
     asfEl.innerHTML = `
@@ -2416,7 +2430,7 @@ function toggleMoreInfo() {
 }
 
 function copyArticleLink(id) {
-  const url = window.location.origin + window.location.pathname + '#article-' + id;
+  const url = window.location.origin + '/article/' + id;
   navigator.clipboard.writeText(url).then(()=>{
     const btn = document.querySelector(`button[onclick="copyArticleLink(${id})"]`);
     if (btn) { const orig = btn.textContent; btn.textContent='✓ Copied'; setTimeout(()=>{ btn.textContent=orig; }, 1800); }
@@ -2519,11 +2533,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   await loadArticles();
 
-  // Hash routing — open article directly if URL has #article-{id}
+  // Clean URL routing — open article directly if URL is /article/{id} or legacy #article-{id}
+  const pathMatch = window.location.pathname.match(/^\/article\/(\d+)\/?$/);
   const hash = window.location.hash;
-  const hashMatch = hash && hash.match(/^#article-(\d+)$/);
-  if (hashMatch) {
-    const targetId = parseInt(hashMatch[1]);
+  const hashMatch = !pathMatch && hash && hash.match(/^#article-(\d+)$/);
+  const targetId = pathMatch ? parseInt(pathMatch[1]) : (hashMatch ? parseInt(hashMatch[1]) : null);
+  if (targetId) {
     const found = articles.find(a => a.id === targetId);
     if (found) {
       renderHome();
