@@ -167,7 +167,7 @@ nav{display:none!important}
 .social-platform{display:flex;align-items:center;gap:10px}
 .social-icon{width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 /* ARTICLE VIEW */
-.art-view{max-width:1200px;margin:0 auto;padding:40px clamp(8px,1.5vw,20px)}
+.art-view{max-width:860px;margin:0 auto;padding:40px clamp(8px,1.5vw,20px);width:100%;box-sizing:border-box}
 .art-layout{display:grid;grid-template-columns:1fr 320px;gap:56px;align-items:start}
 .art-back{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--charcoal-med);cursor:pointer;margin-bottom:28px;transition:color .2s}
 .art-back:hover{color:var(--crimson)}
@@ -189,11 +189,13 @@ nav{display:none!important}
 .art-avatar{width:36px;height:36px;background:linear-gradient(135deg,var(--crimson),var(--crimson-dark));border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:700;flex-shrink:0}
 .art-byline-name{font-weight:600;color:var(--txt);font-size:13px}
 .art-byline-meta{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--txt3);margin-top:2px;flex-wrap:wrap}
-.art-hero-img{width:100%;height:auto;max-height:400px;object-fit:cover;object-position:center;display:block;margin-bottom:8px;border-radius:2px}
-.art-hero-video{width:100%;max-height:400px;margin-bottom:8px;display:block}
+.art-hero-img{width:100%;max-width:100%;height:auto;display:block;margin:0 auto 8px;border-radius:2px}
+.art-hero-video{width:100%;max-width:100%;margin:0 auto 8px;display:block}
 .art-img-cap{font-size:12px;color:var(--txt3);font-style:italic;margin-bottom:28px;padding:0 4px}
 /* ARTICLE CONTENT */
-.article-content{font-size:17px;line-height:1.85;color:#222}
+.article-content{font-size:17px;line-height:1.85;color:#222;width:100%;box-sizing:border-box;overflow:hidden}
+.article-content img{max-width:100%;max-height:500px;height:auto;object-fit:contain;display:block;margin:1.2em auto;border-radius:2px}
+.article-content video{max-width:100%;max-height:500px;display:block;margin:1.2em auto}
 .article-content p{margin-bottom:1.4em}
 .article-content p:first-child::first-letter{font-family:'Playfair Display',serif;font-size:4.5rem;font-weight:900;color:var(--crimson);float:left;line-height:.75;margin-right:.08em;margin-top:.05em}
 .article-content h2{font-family:'Playfair Display',serif;font-size:1.6em;font-weight:700;margin:1.8em 0 .6em;padding-bottom:.3em;border-bottom:2px solid var(--border)}
@@ -423,6 +425,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
 .admin-btn-pub{color:#34d399;border-color:#34d399}.admin-btn-pub:hover{background:#34d399;color:#000}
 .admin-btn-unpub{color:#f59e0b;border-color:#f59e0b}.admin-btn-unpub:hover{background:#f59e0b;color:#000}
 .admin-btn-del{color:#f87171;border-color:#f87171}.admin-btn-del:hover{background:#f87171;color:#fff}
+.admin-btn-copy{color:#60a5fa;border-color:#60a5fa}.admin-btn-copy:hover{background:#60a5fa;color:#000}
 /* INLINE CONFIRM */
 .inline-confirm{display:inline-flex;align-items:center;gap:6px;background:rgba(248,113,113,.1);border:1px solid #f87171;padding:3px 8px;border-radius:2px}
 .inline-confirm span{font-size:11px;color:#fca5a5}
@@ -549,6 +552,9 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
   <div class="drawer-section-label">Browse</div>
   <div class="drawer-item" id="dnavAll" onclick="closeDrawer();goHome()">
     <span class="drawer-item-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></span>Home
+  </div>
+  <div class="drawer-item" id="dnavAllCat" onclick="closeDrawer();setNav('All')">
+    <span class="drawer-item-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></span>All
   </div>
   <div class="drawer-item" id="dnavWorld" onclick="closeDrawer();setNav('World News')">
     <span class="drawer-item-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>World News
@@ -685,6 +691,8 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
         <div class="art-moreinfo-panel" id="artMoreInfoPanel">
           <div class="art-moreinfo-row"><span class="art-moreinfo-label">Published:</span><span id="artInfoPublished">—</span></div>
           <div class="art-moreinfo-row"><span class="art-moreinfo-label">Last Edited:</span><span id="artInfoLastEdited">—</span></div>
+          <div class="art-moreinfo-row"><span class="art-moreinfo-label">Author:</span><span id="artInfoAuthor">—</span></div>
+          <div class="art-moreinfo-row"><span class="art-moreinfo-label">Category:</span><span id="artInfoCat">—</span></div>
         </div>
         <img class="art-hero-img" id="artHeroImg" src="" alt="" style="display:none"/>
         <video class="art-hero-video" id="artHeroVideo" controls style="display:none"></video>
@@ -942,6 +950,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
       <div class="footer-col">
         <h4>Sections</h4>
         <ul>
+          <li onclick="setNav('All')">All</li>
           <li onclick="setNav('World News')">World News</li>
           <li onclick="setNav('Business')">Business</li>
           <li onclick="setNav('Tech')">Technology</li>
@@ -1681,7 +1690,7 @@ function showView(name) {
 function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
 
 function setNav(cat) {
-  if (cat==='all') { goHome(); return; }
+  if (cat==='all' || cat==='All') { showCategoryView('All'); updateNav('All'); return; }
   currentCat = cat;
   showCategoryView(cat);
   updateNav(cat);
@@ -1758,7 +1767,7 @@ function renderFeed(pub) {
   // buried by demo articles — demo articles fill remaining slots up to 8
   const real = pub.filter(a=>a.id < 9000);
   const demo = pub.filter(a=>a.id >= 9000);
-  const items = [...real, ...demo].slice(0,12);
+  const items = [...real, ...demo].slice(0,30);
   if (!items.length) { grid.innerHTML=''; return; }
   grid.innerHTML = items.map(a=>cardHtml(a)).join('');
 }
@@ -1891,9 +1900,13 @@ async function openArticle(id, pushStack=true) {
       const editDt = new Date(a.last_edited);
       infoEditEl.textContent = !isNaN(editDt) ? fmtDate(a.last_edited) + ', ' + editDt.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}) : a.last_edited;
     } else {
-      infoEditEl.textContent = 'Not set';
+      infoEditEl.textContent = '—';
     }
   }
+  const infoAuthorEl = document.getElementById('artInfoAuthor');
+  const infoCatEl    = document.getElementById('artInfoCat');
+  if (infoAuthorEl) infoAuthorEl.textContent = a.author || 'Staff Reporter';
+  if (infoCatEl)    infoCatEl.textContent    = a.cat    || '—';
   const infoPanelEl = document.getElementById('artMoreInfoPanel');
   if (infoPanelEl) infoPanelEl.classList.remove('show');
 
@@ -2023,9 +2036,10 @@ function setupReadingProgress() {
 function showCategoryView(cat) {
   currentCat = cat;
   showView('category');
-  document.getElementById('catBcName').textContent = cat;
-  document.getElementById('catViewName').textContent = cat;
-  const items = articles.filter(a=>a.cat===cat);
+  const isAll = cat==='All';
+  document.getElementById('catBcName').textContent = isAll ? 'All Articles' : cat;
+  document.getElementById('catViewName').textContent = isAll ? 'All Articles' : cat;
+  const items = isAll ? articles.slice() : articles.filter(a=>a.cat===cat);
   document.getElementById('catViewCount').textContent = items.length + ' ' + (items.length===1?'story':'stories');
   document.getElementById('catViewGrid').innerHTML = items.length ? items.map(a=>cardHtml(a)).join('') : '<div class="empty"><div class="empty-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></div><h2>No Stories Yet</h2><p>No stories in '+cat+' yet.</p></div>';
   renderPopularWidget('catPopularWidget');
@@ -2177,6 +2191,7 @@ function adminRowHtml(a) {
     <div class="admin-art-actions">
       <button class="admin-art-btn admin-btn-edit" onclick="editArticle(${a.id})">Edit</button>
       <button class="admin-art-btn ${pubClass}" onclick="togglePublish(${a.id})">${pubLabel}</button>
+      <button class="admin-art-btn admin-btn-copy" onclick="copyArticleLink(${a.id})" title="Copy public link">🔗 Link</button>
       <button class="admin-art-btn admin-btn-del" id="del-btn-${a.id}" onclick="confirmDelete(${a.id})">Delete</button>
     </div></div>`;
 }
@@ -2261,6 +2276,14 @@ function toggleMoreInfo() {
   const panel = document.getElementById('artMoreInfoPanel');
   if (!panel) return;
   panel.classList.toggle('show');
+}
+
+function copyArticleLink(id) {
+  const url = window.location.origin + window.location.pathname + '?article=' + id;
+  navigator.clipboard.writeText(url).then(()=>{
+    const btn = document.querySelector(`button[onclick="copyArticleLink(${id})"]`);
+    if (btn) { const orig = btn.textContent; btn.textContent='✓ Copied'; setTimeout(()=>{ btn.textContent=orig; }, 1800); }
+  }).catch(()=>{ prompt('Copy this link:', url); });
 }
 
 // ─── Category auto-detect ───────────────────────────────
