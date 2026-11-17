@@ -48,10 +48,10 @@ if ($method === 'GET') {
 
     // All articles — always merge demo articles with DB articles
     if ($isAdmin) {
-        // Admin: ALL DB articles (incl. drafts) + demo articles (NO Chris Morgan archive)
+        // Admin: ALL DB articles (incl. drafts) + all demo/archive articles
         $stmt = $db->query('SELECT * FROM articles ORDER BY date DESC');
         $rows = $stmt->fetchAll();
-        $result = array_merge(getDemoArticles(), array_map('formatArticle', $rows));
+        $result = array_merge(getDemoArticles(), getChrisMorganArticles(), getArchiveArticles(), array_map('formatArticle', $rows));
     } else {
         // Public: published DB articles + demo articles + Chris Morgan archive
         $stmt = $db->query('SELECT * FROM articles WHERE published = 1 ORDER BY date DESC');
