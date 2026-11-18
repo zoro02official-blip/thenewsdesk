@@ -1,6 +1,6 @@
 <?php
 // ═══════════════════════════════════════════════════════════
-//  The News Desk — Articles API
+//  The Hermes News — Articles API
 //
 //  GET    /api/articles.php              → published articles only
 //  GET    /api/articles.php?id=X         → single article

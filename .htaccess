@@ -1,4 +1,4 @@
-# The News Desk — Apache config for Hostinger shared hosting
+# The Hermes News — Apache config for Hostinger shared hosting
 
 # ── SPA routing — serve index.html for /article/{id} paths ───
 <IfModule mod_rewrite.c>

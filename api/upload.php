@@ -1,6 +1,6 @@
 <?php
 // ═══════════════════════════════════════════════════════════
-//  The News Desk — Media Upload API
+//  The Hermes News — Media Upload API
 //  POST multipart/form-data with field "file"
 //  Returns: {url: '/uploads/media/filename.ext'}
 //

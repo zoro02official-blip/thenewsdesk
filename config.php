@@ -1,16 +1,16 @@
 <?php
 // ═══════════════════════════════════════════════════════════
-//  The News Desk — Database Config
+//  The Hermes News — Database Config
 //  Fill in these values from Hostinger hPanel → Databases
 // ═══════════════════════════════════════════════════════════
 
 define('DB_HOST', 'localhost');         // Always localhost on Hostinger shared
-define('DB_NAME', 'u743676866_TheNewsDesk');
-define('DB_USER', 'u743676866_thenewsdesk');
-define('DB_PASS', 'Newsdesk05427k');
+define('DB_NAME', 'u458421599_thehermesnews');
+define('DB_USER', 'u458421599_thehermesnews');
+define('DB_PASS', 'Zoroxproxy01');
 
 // ── Site URL (no trailing slash) ──────────────────────────
-define('SITE_URL', 'https://thenewsdesk.space');
+define('SITE_URL', 'https://thehermesnews.com');
 
 // ── Upload limits ─────────────────────────────────────────
 define('MAX_IMAGE_MB', 10);   // Max image upload size in MB

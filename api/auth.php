@@ -1,6 +1,6 @@
 <?php
 // ═══════════════════════════════════════════════════════════
-//  The News Desk — Auth API
+//  The Hermes News — Auth API
 //  POST  {action:'login',  username, password}  → {success, user}
 //  POST  {action:'logout'}                      → {success}
 //  GET                                           → {loggedIn, user}

@@ -1,6 +1,6 @@
 <?php
 // ═══════════════════════════════════════════════════════════
-//  The News Desk — Comments API
+//  The Hermes News — Comments API
 //  GET  /api/comments.php?article_id=X  → all comments for article
 //  POST /api/comments.php               → {article_id, author, text}
 // ═══════════════════════════════════════════════════════════
