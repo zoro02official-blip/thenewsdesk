@@ -3078,7 +3078,8 @@ function bimPreviewUrl() {
   };
 }
 
-document.getElementById('bimUrlInput').addEventListener('keydown', function(e) {
+var _bimUrlInput = document.getElementById('bimUrlInput');
+if (_bimUrlInput) _bimUrlInput.addEventListener('keydown', function(e) {
   if (e.key === 'Enter') { e.preventDefault(); bimPreviewUrl(); }
 });
 
@@ -3098,7 +3099,8 @@ function bimInsertFromUrl() {
   if (url) bimInsertUrl(url);
 }
 
-document.getElementById('bimFileInput').addEventListener('change', function() {
+var _bimFileInput = document.getElementById('bimFileInput');
+if (_bimFileInput) _bimFileInput.addEventListener('change', function() {
   if (this.files && this.files[0]) bimHandleFile(this.files[0]);
 });
 
