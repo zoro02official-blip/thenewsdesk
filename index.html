@@ -3043,12 +3043,16 @@ function bimClose() {
   _bimFileReady = null;
 }
 
-document.getElementById('bimCloseBtn').addEventListener('click', bimClose);
-document.getElementById('bodyImgModal').addEventListener('click', function(e) {
-  if (e.target === this) bimClose();
+document.addEventListener('DOMContentLoaded', function() {
+  var bimBtn = document.getElementById('bimCloseBtn');
+  if (bimBtn) bimBtn.addEventListener('click', bimClose);
+  var bimModal = document.getElementById('bodyImgModal');
+  if (bimModal) bimModal.addEventListener('click', function(e) {
+    if (e.target === this) bimClose();
+  });
 });
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape' && document.getElementById('bodyImgModal').classList.contains('open')) bimClose();
+  if (e.key === 'Escape' && document.getElementById('bodyImgModal') && document.getElementById('bodyImgModal').classList.contains('open')) bimClose();
 });
 
 function bimSwitchTab(tab) {
