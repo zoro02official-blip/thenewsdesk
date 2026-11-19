@@ -11,6 +11,13 @@
 //  POST   /api/articles.php?action=view&id=X → increment view count
 // ═══════════════════════════════════════════════════════════
 
+// Buffer output so any PHP warnings don't corrupt JSON responses
+ob_start(function($buf) {
+    $i = 0; $len = strlen($buf);
+    while ($i < $len && $buf[$i] !== '{' && $buf[$i] !== '[') $i++;
+    return ($i < $len) ? substr($buf, $i) : $buf;
+});
+
 session_start();
 require_once '../config.php';
 setCorsHeaders();
@@ -20,20 +27,20 @@ $id     = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $action = $_GET['action'] ?? '';
 $db     = getDB();
 
-// One-time migration: add last_edited column if it doesn't exist
+// One-time migration (only if DB available)
 if ($db !== null) {
     try {
         $db->exec('ALTER TABLE articles ADD COLUMN IF NOT EXISTS last_edited DATETIME NULL DEFAULT NULL');
         $db->exec('ALTER TABLE articles ADD COLUMN IF NOT EXISTS copyright_email VARCHAR(255) NULL DEFAULT NULL');
     } catch (\Exception $e) { /* already exists or unsupported — safe to ignore */ }
 
-    // ── Ensure article IDs look large (start at 237891+) ─────
+    // Ensure article IDs look large (start at 237891+)
     try {
         $ai = $db->query("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'articles'")->fetchColumn();
         if ($ai !== false && (int)$ai < 237891) {
             $db->exec("ALTER TABLE articles AUTO_INCREMENT = 237891");
         }
-    } catch (\Exception $e) { /* ignore if information_schema unavailable */ }
+    } catch (\Exception $e) { /* ignore */ }
 }
 
 // ── View count increment (public, no auth) ────────────────
@@ -50,20 +57,30 @@ if ($method === 'GET') {
     $isAdmin = !empty($_GET['admin']) && !empty($_SESSION['user']);
 
     if ($id > 0) {
-        // Single article — check DB first, then embedded
+        // Single article — check DB first, then fall back to embedded
         if ($db !== null) {
             $stmt = $db->prepare('SELECT * FROM articles WHERE id = ?');
             $stmt->execute([$id]);
             $article = $stmt->fetch();
-            if ($article) { echo json_encode(formatArticle($article)); exit; }
+            if ($article) {
+                echo json_encode(formatArticle($article));
+                exit;
+            }
         }
-        // Fall back to embedded articles
+        // Search embedded articles by ID
         $all = array_merge(getDemoArticles(), getChrisMorganArticles(), getArchiveArticles(), getNewsArticles());
-        foreach ($all as $a) { if ((int)($a['id'] ?? 0) === $id) { echo json_encode($a); exit; } }
-        http_response_code(404); echo json_encode(['error' => 'Not found']); exit;
+        foreach ($all as $a) {
+            if ((int)($a['id'] ?? 0) === $id) {
+                echo json_encode($a);
+                exit;
+            }
+        }
+        http_response_code(404);
+        echo json_encode(['error' => 'Not found']);
+        exit;
     }
 
-    // All articles — always merge demo articles with DB articles
+    // All articles — merge DB with embedded
     $rows = [];
     if ($db !== null) {
         try {
@@ -76,7 +93,6 @@ if ($method === 'GET') {
         } catch (\Exception $e) { $rows = []; }
     }
     $result = array_merge(getDemoArticles(), getChrisMorganArticles(), getArchiveArticles(), getNewsArticles(), array_map('formatArticle', $rows));
-    // Sort merged list by date descending
     usort($result, function($a, $b) {
         return strtotime($b['date']) - strtotime($a['date']);
     });
@@ -87,6 +103,7 @@ if ($method === 'GET') {
 // ── POST (create) ─────────────────────────────────────────
 if ($method === 'POST') {
     requireAuth();
+    if ($db === null) { http_response_code(503); echo json_encode(['error' => 'Database unavailable']); exit; }
     $body = json_decode(file_get_contents('php://input'), true) ?? [];
 
     $title = trim($body['title'] ?? '');
@@ -143,6 +160,7 @@ if ($method === 'POST') {
 // ── PUT (update) — partial-safe: missing fields keep existing values ──
 if ($method === 'PUT') {
     requireAuth();
+    if ($db === null) { http_response_code(503); echo json_encode(['error' => 'Database unavailable']); exit; }
     $body = json_decode(file_get_contents('php://input'), true) ?? [];
     $id   = (int)($body['id'] ?? 0);
     if (!$id) { http_response_code(400); echo json_encode(['error' => 'Article ID required']); exit; }
@@ -249,6 +267,7 @@ if ($method === 'PUT') {
 // ── DELETE ────────────────────────────────────────────────
 if ($method === 'DELETE') {
     requireAuth();
+    if ($db === null) { http_response_code(503); echo json_encode(['error' => 'Database unavailable']); exit; }
     if (!$id) { http_response_code(400); echo json_encode(['error' => 'Article ID required']); exit; }
 
     $check = $db->prepare('SELECT id FROM articles WHERE id = ?');

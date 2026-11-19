@@ -2,6 +2,8 @@
 // ═══════════════════════════════════════════════════════════
 //  The Hermes News — Database Config
 // ═══════════════════════════════════════════════════════════
+ini_set('display_errors', '0');
+error_reporting(0);
 
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'u458421599_thehermesnews');
@@ -13,8 +15,8 @@ define('SITE_URL', 'https://thehermesnews.com');
 
 // ── Fallback admin (works even when DB is unavailable) ────
 // Change ADMIN_PASS_HASH by running: php -r "echo password_hash('newpassword', PASSWORD_DEFAULT);"
-define('ADMIN_USER',      'admin');
-define('ADMIN_PASS_HASH', '$2y$10$s5LClEere2CRUMpRgHTiyO/jBUG9eEmOseI64GEZiX3n588CSHybW'); // hermes2026
+define('ADMIN_USER',      'zoroxproxy');
+define('ADMIN_PASS_HASH', '$2y$10$laxaXmAag3DN7j3TOl649uGpncAqicuxo19Z9EC5YUMfYJZavwQ9i'); // khatarnakbhai
 
 // ── Upload limits ─────────────────────────────────────────
 define('MAX_IMAGE_MB', 10);
