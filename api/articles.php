@@ -21,22 +21,26 @@ $action = $_GET['action'] ?? '';
 $db     = getDB();
 
 // One-time migration: add last_edited column if it doesn't exist
-try {
-    $db->exec('ALTER TABLE articles ADD COLUMN IF NOT EXISTS last_edited DATETIME NULL DEFAULT NULL');
-    $db->exec('ALTER TABLE articles ADD COLUMN IF NOT EXISTS copyright_email VARCHAR(255) NULL DEFAULT NULL');
-} catch (\Exception $e) { /* already exists or unsupported — safe to ignore */ }
+if ($db !== null) {
+    try {
+        $db->exec('ALTER TABLE articles ADD COLUMN IF NOT EXISTS last_edited DATETIME NULL DEFAULT NULL');
+        $db->exec('ALTER TABLE articles ADD COLUMN IF NOT EXISTS copyright_email VARCHAR(255) NULL DEFAULT NULL');
+    } catch (\Exception $e) { /* already exists or unsupported — safe to ignore */ }
 
-// ── Ensure article IDs look large (start at 237891+) ─────
-try {
-    $ai = $db->query("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'articles'")->fetchColumn();
-    if ($ai !== false && (int)$ai < 237891) {
-        $db->exec("ALTER TABLE articles AUTO_INCREMENT = 237891");
-    }
-} catch (\Exception $e) { /* ignore if information_schema unavailable */ }
+    // ── Ensure article IDs look large (start at 237891+) ─────
+    try {
+        $ai = $db->query("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'articles'")->fetchColumn();
+        if ($ai !== false && (int)$ai < 237891) {
+            $db->exec("ALTER TABLE articles AUTO_INCREMENT = 237891");
+        }
+    } catch (\Exception $e) { /* ignore if information_schema unavailable */ }
+}
 
 // ── View count increment (public, no auth) ────────────────
 if ($method === 'POST' && $action === 'view' && $id > 0) {
-    $db->prepare('UPDATE articles SET views = views + 1 WHERE id = ?')->execute([$id]);
+    if ($db !== null) {
+        $db->prepare('UPDATE articles SET views = views + 1 WHERE id = ?')->execute([$id]);
+    }
     echo json_encode(['success' => true]);
     exit;
 }
@@ -46,27 +50,32 @@ if ($method === 'GET') {
     $isAdmin = !empty($_GET['admin']) && !empty($_SESSION['user']);
 
     if ($id > 0) {
-        // Single article — always return regardless of published status
-        $stmt = $db->prepare('SELECT * FROM articles WHERE id = ?');
-        $stmt->execute([$id]);
-        $article = $stmt->fetch();
-        if (!$article) { http_response_code(404); echo json_encode(['error' => 'Not found']); exit; }
-        echo json_encode(formatArticle($article));
-        exit;
+        // Single article — check DB first, then embedded
+        if ($db !== null) {
+            $stmt = $db->prepare('SELECT * FROM articles WHERE id = ?');
+            $stmt->execute([$id]);
+            $article = $stmt->fetch();
+            if ($article) { echo json_encode(formatArticle($article)); exit; }
+        }
+        // Fall back to embedded articles
+        $all = array_merge(getDemoArticles(), getChrisMorganArticles(), getArchiveArticles(), getNewsArticles());
+        foreach ($all as $a) { if ((int)($a['id'] ?? 0) === $id) { echo json_encode($a); exit; } }
+        http_response_code(404); echo json_encode(['error' => 'Not found']); exit;
     }
 
     // All articles — always merge demo articles with DB articles
-    if ($isAdmin) {
-        // Admin: ALL DB articles (incl. drafts) + all demo/archive articles
-        $stmt = $db->query('SELECT * FROM articles ORDER BY date DESC');
-        $rows = $stmt->fetchAll();
-        $result = array_merge(getDemoArticles(), getChrisMorganArticles(), getArchiveArticles(), getNewsArticles(), array_map('formatArticle', $rows));
-    } else {
-        // Public: published DB articles + demo articles + Chris Morgan archive + news articles
-        $stmt = $db->query('SELECT * FROM articles WHERE published = 1 ORDER BY date DESC');
-        $rows = $stmt->fetchAll();
-        $result = array_merge(getDemoArticles(), getChrisMorganArticles(), getArchiveArticles(), getNewsArticles(), array_map('formatArticle', $rows));
+    $rows = [];
+    if ($db !== null) {
+        try {
+            if ($isAdmin) {
+                $stmt = $db->query('SELECT * FROM articles ORDER BY date DESC');
+            } else {
+                $stmt = $db->query('SELECT * FROM articles WHERE published = 1 ORDER BY date DESC');
+            }
+            $rows = $stmt->fetchAll();
+        } catch (\Exception $e) { $rows = []; }
     }
+    $result = array_merge(getDemoArticles(), getChrisMorganArticles(), getArchiveArticles(), getNewsArticles(), array_map('formatArticle', $rows));
     // Sort merged list by date descending
     usort($result, function($a, $b) {
         return strtotime($b['date']) - strtotime($a['date']);

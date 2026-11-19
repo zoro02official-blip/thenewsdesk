@@ -21,8 +21,10 @@ define('ALLOWED_IMAGE_TYPES', ['image/jpeg','image/png','image/webp','image/gif'
 define('ALLOWED_VIDEO_TYPES', ['video/mp4','video/webm','video/quicktime']);
 
 // ─────────────────────────────────────────────────────────
-function getDB(): PDO {
+function getDB(): ?PDO {
     static $pdo = null;
+    static $failed = false;
+    if ($failed) return null;
     if ($pdo === null) {
         try {
             $pdo = new PDO(
@@ -36,10 +38,8 @@ function getDB(): PDO {
                 ]
             );
         } catch (PDOException $e) {
-            http_response_code(500);
-            header('Content-Type: application/json');
-            echo json_encode(['error' => 'Database connection failed. Check config.php.']);
-            exit;
+            $failed = true;
+            return null;
         }
     }
     return $pdo;
