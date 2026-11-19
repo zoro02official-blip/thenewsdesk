@@ -592,7 +592,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
     </div>
     <div class="logo" onclick="goHome()">
       <div class="logo-the">The</div>
-      <div class="logo-name">News Desk</div>
+      <div class="logo-name">Hermes News</div>
       <div class="logo-tagline">World · Business · Tech · Lifestyle · Sports</div>
     </div>
     <div class="hdr-right">
@@ -626,7 +626,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
 <!-- DRAWER PANEL -->
 <div class="drawer" id="drawerPanel">
   <div class="drawer-header">
-    <div class="drawer-logo" onclick="closeDrawer();goHome()">The <span>News</span> Desk</div>
+    <div class="drawer-logo" onclick="closeDrawer();goHome()">The <span>Hermes</span> News</div>
     <button class="drawer-close" onclick="closeDrawer()" aria-label="Close">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
@@ -1038,7 +1038,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
     <div class="footer-grid">
       <div class="footer-brand">
         <div class="logo-the" style="font-family:'Playfair Display',serif;font-size:11px;font-weight:900;letter-spacing:.4em;text-transform:uppercase">The</div>
-        <div class="logo-name" style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:#fff;letter-spacing:.12em;line-height:1">News Desk</div>
+        <div class="logo-name" style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:#fff;letter-spacing:.12em;line-height:1">Hermes News</div>
         <div class="footer-tagline">Independent journalism for a complicated world. Covering the stories that matter, without fear or favour.</div>
         <div class="footer-nl" style="margin-top:16px">
           <p>Get our daily briefing:</p>
@@ -1101,7 +1101,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
     <div class="login-box">
       <div class="login-logo">
         <div class="logo-the">The</div>
-        <div class="logo-name">News Desk</div>
+        <div class="logo-name">Hermes News</div>
         <div style="font-size:12px;color:#9ca3af;margin-top:6px;letter-spacing:.08em;text-transform:uppercase">Newsroom Access</div>
       </div>
       <div id="loginErr" class="login-err" style="display:none"></div>
@@ -1119,7 +1119,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
   <div class="admin-sidebar">
     <div class="admin-sidebar-logo">
       <div class="logo-the" style="font-family:'Playfair Display',serif;font-size:10px;font-weight:900;letter-spacing:.4em;text-transform:uppercase;color:var(--crimson)">The</div>
-      <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:900;color:#fff;letter-spacing:.1em">News Desk</div>
+      <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:900;color:#fff;letter-spacing:.1em">Hermes News</div>
       <div style="font-size:10px;color:#6b7280;margin-top:3px">Newsroom CMS</div>
     </div>
     <div class="admin-sidebar-nav">
@@ -1306,7 +1306,7 @@ const AUTHORS = {
   'David Chen':       {role:'Investigative Reporter',  bio:'Specialises in investigations into corporate and political corruption. Multiple press freedom award recipient.'},
   'Aisha Kamara':     {role:'Culture & Lifestyle Correspondent', bio:'Covers arts, entertainment, and social trends. Previously at The Guardian and The Independent.'},
   'Chris Morgan':     {role:'Editor-in-Chief',          bio:'Founder and Editor-in-Chief of The Hermes News. Veteran journalist with over two decades covering global affairs, politics, and breaking news.'},
-  'Staff Reporter':   {role:'Hermes News',               bio:'The Hermes News staff team covering breaking news and developing stories around the clock.'},
+  'Staff Reporter':   {role:'News Desk',               bio:'The Hermes News staff team covering breaking news and developing stories around the clock.'},
 };
 const CAT_PATHS = {
   'World News': '<circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
@@ -2297,7 +2297,7 @@ function adminTab(tab) {
 }
 
 function getCopyrightEmail() {
-  return localStorage.getItem('hn_copyright_email') || 'copyright@thehermesnews.com';
+  return localStorage.getItem('nd_copyright_email') || 'copyright@thehermesnews.com';
 }
 
 function loadCopyrightEmailInput() {
@@ -2309,7 +2309,7 @@ function saveCopyrightEmail() {
   const inp = document.getElementById('copyrightEmailInput');
   const val = (inp.value || '').trim();
   if (!val) return;
-  localStorage.setItem('hn_copyright_email', val);
+  localStorage.setItem('nd_copyright_email', val);
   updateAllCopyrightEmails(val);
   const status = document.getElementById('copyrightEmailStatus');
   status.style.display = 'inline';
