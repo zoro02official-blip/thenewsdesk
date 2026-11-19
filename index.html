@@ -530,6 +530,87 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
 .ql-toolbar button:hover .ql-fill,.ql-toolbar .ql-active .ql-fill{fill:var(--crimson)!important}
 .ql-toolbar .ql-picker-label:hover,.ql-toolbar .ql-active.ql-picker-label{color:var(--crimson)!important}
 .ql-container{font-size:14px}
+.ql-toolbar .ql-insertBodyImg svg{width:16px;height:16px;vertical-align:middle}
+.ql-toolbar .ql-insertBodyImg:hover svg path,.ql-toolbar .ql-insertBodyImg:hover svg rect,.ql-toolbar .ql-insertBodyImg:hover svg circle{stroke:var(--crimson)!important}
+/* body image insert modal */
+#bodyImgModal{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.7);align-items:center;justify-content:center}
+#bodyImgModal.open{display:flex}
+#bodyImgModalBox{background:#1a1a1a;border:1px solid #374151;border-radius:10px;width:460px;max-width:92vw;padding:0;overflow:hidden}
+#bodyImgModalBox .bim-head{padding:16px 20px 14px;border-bottom:1px solid #2d2d2d;display:flex;align-items:center;justify-content:space-between}
+#bodyImgModalBox .bim-head h3{margin:0;font-size:14px;font-weight:700;color:#f3f4f6;letter-spacing:.02em}
+#bodyImgModalBox .bim-close{background:none;border:none;color:#6b7280;cursor:pointer;font-size:20px;line-height:1;padding:0 2px}
+#bodyImgModalBox .bim-close:hover{color:#f3f4f6}
+#bodyImgModalBox .bim-tabs{display:flex;border-bottom:1px solid #2d2d2d}
+#bodyImgModalBox .bim-tab{flex:1;padding:10px;text-align:center;font-size:12px;font-weight:600;cursor:pointer;color:#6b7280;border-bottom:2px solid transparent;transition:all .15s}
+#bodyImgModalBox .bim-tab.active{color:#f3f4f6;border-bottom-color:var(--crimson)}
+#bodyImgModalBox .bim-body{padding:20px}
+.bim-url-row{display:flex;gap:8px}
+.bim-url-row input{flex:1;background:#2d2d2d;border:1px solid #374151;border-radius:6px;color:#f3f4f6;padding:9px 12px;font-size:13px;outline:none}
+.bim-url-row input:focus{border-color:var(--crimson)}
+.bim-url-row button{background:var(--crimson);color:#fff;border:none;border-radius:6px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.bim-url-row button:hover{opacity:.88}
+.bim-upload-zone{border:2px dashed #374151;border-radius:8px;padding:30px 20px;text-align:center;cursor:pointer;transition:border-color .15s}
+.bim-upload-zone:hover,.bim-upload-zone.drag{border-color:var(--crimson)}
+.bim-upload-zone p{margin:8px 0 0;font-size:13px;color:#6b7280}
+.bim-upload-zone strong{color:#9ca3af}
+#bimUploadProgress{display:none;margin-top:12px}
+#bimUploadProgressBar{height:4px;background:var(--crimson);border-radius:2px;width:0%;transition:width .3s}
+#bimPreview{display:none;margin-top:14px;text-align:center}
+#bimPreview img{max-width:100%;max-height:160px;border-radius:4px;border:1px solid #374151}
+.bim-insert-btn{display:none;width:100%;margin-top:12px;background:var(--crimson);color:#fff;border:none;border-radius:7px;padding:10px;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.03em}
+.bim-insert-btn:hover{opacity:.88}
+#quill-editor .ql-editor img{max-height:260px;width:auto;max-width:100%;display:block;margin:10px auto;border-radius:4px;border:1px solid #374151}
+/* ── BLOCK EDITOR ── */
+#blockEditorWrap{background:#111;border:1px solid #374151;border-radius:8px;overflow:hidden}
+#blockEditorToolbar{background:#0d0d0d;padding:8px 16px;border-bottom:1px solid #1f1f1f;display:flex;align-items:center}
+.be-toolbar-hint{font-size:11px;color:#4b5563}
+.be-toolbar-hint kbd{background:#1f2937;border:1px solid #374151;border-radius:3px;padding:1px 5px;font-size:10px;color:#9ca3af}
+#blockEditorCanvas{background:#1a1a1a;min-height:380px;padding:16px 20px 32px;position:relative}
+/* each block row */
+.be-block{position:relative;margin:2px 0;display:flex;align-items:flex-start;gap:0}
+.be-block:hover .be-controls,.be-block:focus-within .be-controls{opacity:1}
+.be-controls{opacity:0;transition:opacity .15s;display:flex;flex-direction:column;gap:3px;padding:6px 6px 0 0;flex-shrink:0;width:38px}
+.be-ctrl-btn{background:none;border:1px solid #374151;border-radius:4px;color:#6b7280;cursor:pointer;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:13px;padding:0;transition:all .12s}
+.be-ctrl-btn:hover{background:#2d2d2d;color:#f3f4f6;border-color:#6b7280}
+.be-drag{cursor:grab;font-size:14px;letter-spacing:-.1em}
+.be-del{font-size:16px;line-height:1}
+/* block inner — the "white page" */
+.be-block-inner{flex:1;background:#fff;color:#111;border-radius:6px;padding:12px 16px;min-height:44px;outline:none;border:2px solid transparent;transition:border-color .15s;font-family:'Inter',sans-serif;font-size:15px;line-height:1.65;cursor:text;position:relative;word-break:break-word}
+.be-block-inner:focus{border-color:var(--crimson)}
+.be-block-inner[contenteditable]:empty:before{content:attr(data-placeholder);color:#9ca3af;pointer-events:none}
+/* type variants */
+.be-type-heading2{font-size:22px;font-weight:800;line-height:1.3;padding:14px 16px}
+.be-type-heading3{font-size:17px;font-weight:700;line-height:1.35;padding:12px 16px;color:#1f2937}
+.be-type-blockquote{border-left:4px solid var(--crimson);background:#fafafa;padding:12px 20px;font-style:italic;color:#374151}
+.be-type-divider{background:transparent;padding:4px 0;border:none;min-height:auto;cursor:default}
+.be-type-image{background:#f1f5f9;padding:0;overflow:hidden;cursor:default}
+/* image block */
+.be-img-placeholder{padding:40px 20px;text-align:center;cursor:pointer;transition:background .15s}
+.be-img-placeholder:hover{background:#e2e8f0}
+.be-img-placeholder p{margin:10px 0 0;font-size:13px;color:#6b7280}
+.be-image-block img{width:100%;display:block;border-radius:0}
+.be-caption-input{width:100%;box-sizing:border-box;border:none;border-top:1px solid #e5e7eb;padding:8px 12px;font-size:12px;color:#6b7280;background:#f8fafc;outline:none;font-style:italic}
+.be-caption-input:focus{background:#f1f5f9}
+/* type badge */
+.be-type-badge{position:absolute;top:6px;right:8px;font-size:9px;color:#9ca3af;background:#2d2d2d;border:1px solid #374151;border-radius:3px;padding:1px 5px;opacity:0;transition:opacity .15s;pointer-events:none;white-space:nowrap}
+.be-block:hover .be-type-badge{opacity:1}
+/* add row */
+.be-add-row{display:flex;align-items:center;gap:0;padding:3px 38px 3px 38px;opacity:0;transition:opacity .15s}
+.be-add-row:hover{opacity:1}
+.be-block:hover+.be-add-row,.be-block:focus-within+.be-add-row,.be-add-row:hover{opacity:1}
+.be-add-line{flex:1;height:1px;background:#2d2d2d}
+.be-add-btn{background:#2d2d2d;border:1px solid #374151;border-radius:50%;width:22px;height:22px;color:#6b7280;cursor:pointer;font-size:16px;line-height:1;display:flex;align-items:center;justify-content:center;padding:0;flex-shrink:0;margin:0 6px;transition:all .12s}
+.be-add-btn:hover{background:var(--crimson);border-color:var(--crimson);color:#fff}
+/* type picker popover */
+.be-type-picker{position:absolute;background:#1a1a1a;border:1px solid #374151;border-radius:10px;padding:6px;z-index:500;min-width:220px;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.be-picker-btn{display:flex;align-items:center;gap:10px;width:100%;padding:8px 10px;background:none;border:none;border-radius:6px;color:#f3f4f6;cursor:pointer;text-align:left;font-size:13px;transition:background .1s}
+.be-picker-btn:hover{background:#2d2d2d}
+.be-picker-icon{width:28px;height:28px;background:#2d2d2d;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;font-style:normal}
+.be-picker-label strong{display:block;font-size:12px;font-weight:600}
+.be-picker-label small{color:#6b7280;font-size:11px}
+/* drag state */
+.be-dragging{opacity:.4}
+.be-drag-over>.be-block-inner{border-color:#3b82f6!important;box-shadow:0 0 0 3px rgba(59,130,246,.2)}
 /* NEWSPAPER FRONT GRID */
 .np-front{display:flex;flex-direction:row;align-items:flex-start;height:360px;overflow:hidden;background:var(--bg2);border-bottom:2px solid var(--border);max-width:100%}
 .np-left{width:260px;flex-shrink:0;padding:24px 20px;background:var(--bg2);overflow:hidden;border-right:1px solid var(--border)}
@@ -558,8 +639,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
 .art-hero-video{max-height:500px}
 .article-content img{max-height:500px;object-fit:contain}
 </style>
-<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet"/>
-<script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+<!-- Quill removed: replaced by built-in block editor -->
 </head>
 <body>
 <div id="reading-progress"></div>
@@ -1279,7 +1359,12 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover{opacity:1}
             <label class="form-label">Body Content</label>
             <span class="form-wc" id="bodyWc">0 words</span>
           </div>
-          <div id="quill-editor"></div>
+          <div id="blockEditorWrap">
+            <div id="blockEditorToolbar">
+              <span class="be-toolbar-hint">Press <kbd>Enter</kbd> for new block · click <strong>+</strong> to choose type · drag <span style="letter-spacing:-.05em">⠿</span> to reorder</span>
+            </div>
+            <div id="blockEditorCanvas"></div>
+          </div>
         </div>
         <div class="form-actions">
           <button class="btn-primary" id="saveBtn" onclick="saveArticle()">
@@ -1516,7 +1601,7 @@ async function saveArticle() {
     const payload = {
       title,
       exc:         document.getElementById('fExc').value.trim(),
-      body:        quill.root.innerHTML.trim(),
+      body:        getBodyEditorHTML(),
       cat,
       author:      document.getElementById('fAuthor').value.trim() || 'Staff Reporter',
       img:         imgUrl,
@@ -2428,7 +2513,7 @@ function editArticle(id) {
   document.getElementById('fAuthor').value  = a.author||'';
   document.getElementById('fImg').value     = a.img||'';
   document.getElementById('fTags').value    = (a.tags||[]).join(', ');
-  quill.root.innerHTML = a.body||'';
+  beLoadHTML(a.body||'');
   document.getElementById('fPublished').checked = !!a.published;
   document.getElementById('fFeatured').checked  = !!a.featured;
   document.getElementById('fBreaking').checked  = !!a.breaking;
@@ -2474,7 +2559,7 @@ function resetForm() {
   ['fTitle','fExc','fAuthor','fImg','fTags','fLastEdited','fCopyrightEmail'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
   // Pre-fill date with current datetime so admin controls the publish date
   (function(){const fDate=document.getElementById('fDate'); if(!fDate) return; const now=new Date(); const pad=n=>String(n).padStart(2,'0'); fDate.value=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate())+'T'+pad(now.getHours())+':'+pad(now.getMinutes());}());
-  quill.setContents([]);
+  beInit();
   document.getElementById('fCat').value='';
   document.getElementById('catAutoLabel').style.display='none';
   document.getElementById('fPublished').checked=true;
@@ -2531,7 +2616,7 @@ function detectCategory(text) {
 
 function runCatDetect(silent) {
   const title = (document.getElementById('fTitle')||{}).value || '';
-  const body  = (typeof quill !== 'undefined') ? quill.getText() : '';
+  const body  = (window.beBlocks||[]).map(function(b){ var d=document.createElement('div'); d.innerHTML=b.content||''; return d.textContent||''; }).join(' ');
   const exc   = (document.getElementById('fExc')||{}).value || '';
   const combined = title + ' ' + exc + ' ' + body;
   const detected = detectCategory(combined);
@@ -2560,35 +2645,501 @@ document.addEventListener('DOMContentLoaded', ()=>{
   const excEl   = document.getElementById('fExc');
   if (titleEl) titleEl.addEventListener('input', scheduleCatDetect);
   if (excEl)   excEl.addEventListener('input',  scheduleCatDetect);
-  // quill fires text-change — wired in initEditor below
+  // Init block editor
+  beInit();
 });
 // ───────────────────────────────────────────────────────
 
 function updateWc() {
-  const body = (typeof quill !== 'undefined') ? quill.getText() : '';
-  const words = body.trim().split(/\s+/).filter(Boolean).length;
-  document.getElementById('bodyWc').textContent = words + ' word' + (words!==1?'s':'');
+  var text = '';
+  if (window.beBlocks) {
+    beBlocks.forEach(function(b) {
+      if (b.content) {
+        var tmp = document.createElement('div');
+        tmp.innerHTML = b.content;
+        text += ' ' + (tmp.textContent || tmp.innerText || '');
+      }
+    });
+  }
+  var words = text.trim().split(/\s+/).filter(Boolean).length;
+  var el = document.getElementById('bodyWc');
+  if (el) el.textContent = words + ' word' + (words!==1?'s':'');
 }
 
-// ═══════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════
-// Initialize Quill rich text editor
-var quill = new Quill('#quill-editor', {
-  theme: 'snow',
-  placeholder: 'Write your article here…',
-  modules: {
-    toolbar: [
-      [{ header: [2, 3, false] }],
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      ['blockquote', 'code-block'],
-      ['link'],
-      ['clean']
-    ]
+// ═══════════════════════════════════════════════════════════
+// BLOCK EDITOR ENGINE
+// ═══════════════════════════════════════════════════════════
+var beBlocks = [];
+var beNextId  = 1;
+var beDragId  = null;
+var _bimTargetBlockId = null;
+
+function beGenId() { return 'blk_' + (beNextId++); }
+
+function beInit() {
+  beBlocks = [{ id: beGenId(), type: 'paragraph', content: '' }];
+  beRender();
+}
+
+// Serialize all blocks → HTML string (stored as article body)
+function getBodyEditorHTML() {
+  return beBlocks.map(function(b) {
+    switch(b.type) {
+      case 'paragraph':   return '<p>' + (b.content||'&nbsp;') + '</p>';
+      case 'heading2':    return '<h2>' + (b.content||'') + '</h2>';
+      case 'heading3':    return '<h3>' + (b.content||'') + '</h3>';
+      case 'blockquote':  return '<blockquote><p>' + (b.content||'') + '</p></blockquote>';
+      case 'divider':     return '<hr>';
+      case 'image':
+        if (!b.src) return '';
+        return '<figure style="margin:1.5em 0"><img src="' + beEsc(b.src) + '" alt="' + beEsc(b.alt||'') + '" style="width:100%;display:block;border-radius:4px">' +
+               (b.caption ? '<figcaption style="text-align:center;font-size:12px;color:#9ca3af;margin-top:6px">' + beEsc(b.caption) + '</figcaption>' : '') +
+               '</figure>';
+      default: return '<p>' + (b.content||'') + '</p>';
+    }
+  }).filter(Boolean).join('\n');
+}
+
+function beEsc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Parse stored HTML back into blocks when editing an article
+function beLoadHTML(html) {
+  beNextId = 1;
+  if (!html || !html.trim()) { beInit(); return; }
+  var parser = new DOMParser();
+  var doc = parser.parseFromString('<div>' + html + '</div>', 'text/html');
+  var nodes = Array.from(doc.body.firstChild.childNodes);
+  beBlocks = [];
+  nodes.forEach(function(node) {
+    if (node.nodeType !== 1) return;
+    var tag = node.tagName.toLowerCase();
+    if (tag === 'p') {
+      beBlocks.push({ id: beGenId(), type: 'paragraph', content: node.innerHTML });
+    } else if (tag === 'h2') {
+      beBlocks.push({ id: beGenId(), type: 'heading2', content: node.innerHTML });
+    } else if (tag === 'h3') {
+      beBlocks.push({ id: beGenId(), type: 'heading3', content: node.innerHTML });
+    } else if (tag === 'h1') {
+      beBlocks.push({ id: beGenId(), type: 'heading2', content: node.innerHTML });
+    } else if (tag === 'blockquote') {
+      var p = node.querySelector('p');
+      beBlocks.push({ id: beGenId(), type: 'blockquote', content: p ? p.innerHTML : node.innerHTML });
+    } else if (tag === 'hr') {
+      beBlocks.push({ id: beGenId(), type: 'divider' });
+    } else if (tag === 'figure') {
+      var img = node.querySelector('img');
+      var cap = node.querySelector('figcaption');
+      if (img) beBlocks.push({ id: beGenId(), type: 'image', src: img.getAttribute('src')||'', alt: img.getAttribute('alt')||'', caption: cap ? cap.textContent : '' });
+    } else if (tag === 'img') {
+      beBlocks.push({ id: beGenId(), type: 'image', src: node.getAttribute('src')||'', alt: node.getAttribute('alt')||'', caption: '' });
+    } else if (tag === 'ul' || tag === 'ol') {
+      // Convert lists to paragraphs for now
+      var items = Array.from(node.querySelectorAll('li')).map(function(li){ return li.innerHTML; });
+      items.forEach(function(item){ beBlocks.push({ id: beGenId(), type: 'paragraph', content: item }); });
+    } else {
+      beBlocks.push({ id: beGenId(), type: 'paragraph', content: node.innerHTML });
+    }
+  });
+  if (beBlocks.length === 0) beInit();
+  else beRender();
+}
+
+// Render all blocks into the canvas
+function beRender() {
+  var canvas = document.getElementById('blockEditorCanvas');
+  if (!canvas) return;
+  canvas.innerHTML = '';
+  for (var i = 0; i < beBlocks.length; i++) {
+    canvas.appendChild(beRenderAddRow(i));
+    canvas.appendChild(beRenderBlock(beBlocks[i]));
   }
+  canvas.appendChild(beRenderAddRow(beBlocks.length));
+  updateWc();
+  scheduleCatDetect();
+}
+
+function beRenderBlock(block) {
+  var wrap = document.createElement('div');
+  wrap.className = 'be-block';
+  wrap.dataset.id = block.id;
+
+  // Controls (drag + delete)
+  var ctrl = document.createElement('div');
+  ctrl.className = 'be-controls';
+  var dragBtn = document.createElement('button');
+  dragBtn.className = 'be-ctrl-btn be-drag';
+  dragBtn.title = 'Drag to reorder';
+  dragBtn.textContent = '⠿';
+  var delBtn = document.createElement('button');
+  delBtn.className = 'be-ctrl-btn be-del';
+  delBtn.title = 'Delete block';
+  delBtn.textContent = '×';
+  delBtn.onclick = function() { beDeleteBlock(block.id); };
+  ctrl.appendChild(dragBtn);
+  ctrl.appendChild(delBtn);
+  wrap.appendChild(ctrl);
+
+  // Inner content area
+  var inner = document.createElement('div');
+  inner.className = 'be-block-inner be-type-' + block.type;
+
+  if (block.type === 'paragraph' || block.type === 'heading2' || block.type === 'heading3' || block.type === 'blockquote') {
+    inner.contentEditable = 'true';
+    inner.dataset.placeholder = block.type === 'heading2' ? 'Heading…' : block.type === 'heading3' ? 'Subheading…' : block.type === 'blockquote' ? 'Quote…' : 'Write something…';
+    inner.innerHTML = block.content || '';
+    beBindText(inner, block);
+  } else if (block.type === 'image') {
+    inner.className += ' be-image-block';
+    if (block.src) {
+      var img = document.createElement('img');
+      img.src = block.src;
+      img.alt = block.alt || '';
+      var capInput = document.createElement('input');
+      capInput.className = 'be-caption-input';
+      capInput.type = 'text';
+      capInput.placeholder = 'Add a caption (optional)';
+      capInput.value = block.caption || '';
+      capInput.addEventListener('input', function() { block.caption = capInput.value; });
+      inner.appendChild(img);
+      inner.appendChild(capInput);
+    } else {
+      var ph = document.createElement('div');
+      ph.className = 'be-img-placeholder';
+      ph.innerHTML = '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg><p>Click to add image</p>';
+      var fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.accept = 'image/*';
+      fileInput.style.display = 'none';
+      fileInput.id = 'beFile_' + block.id;
+      fileInput.addEventListener('change', function(e) {
+        if (e.target.files[0]) beHandleImgUpload(block.id, e.target.files[0]);
+      });
+      ph.addEventListener('click', function() {
+        // show picker: URL or file
+        _bimTargetBlockId = block.id;
+        bimOpen();
+      });
+      inner.appendChild(ph);
+      inner.appendChild(fileInput);
+    }
+  } else if (block.type === 'divider') {
+    inner.style.background = 'transparent';
+    inner.style.padding = '8px 0';
+    inner.style.border = 'none';
+    inner.style.cursor = 'default';
+    inner.innerHTML = '<hr style="border:none;border-top:2px solid #e5e7eb;margin:0">';
+  }
+
+  wrap.appendChild(inner);
+
+  // Type badge (shows on hover)
+  var badge = document.createElement('div');
+  badge.className = 'be-type-badge';
+  badge.textContent = ({paragraph:'¶ Text', heading2:'H2 Heading', heading3:'H3 Sub', image:'🖼 Image', blockquote:'" Quote', divider:'— Divider'}[block.type]) || block.type;
+  wrap.appendChild(badge);
+
+  // Drag & drop reordering
+  wrap.draggable = true;
+  wrap.addEventListener('dragstart', function(e) {
+    beDragId = block.id;
+    wrap.classList.add('be-dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  });
+  wrap.addEventListener('dragend', function() {
+    beDragId = null;
+    document.querySelectorAll('.be-block').forEach(function(b){ b.classList.remove('be-dragging','be-drag-over'); });
+  });
+  wrap.addEventListener('dragover', function(e) { e.preventDefault(); wrap.classList.add('be-drag-over'); });
+  wrap.addEventListener('dragleave', function() { wrap.classList.remove('be-drag-over'); });
+  wrap.addEventListener('drop', function(e) {
+    e.preventDefault();
+    wrap.classList.remove('be-drag-over');
+    if (beDragId && beDragId !== block.id) beMoveBlock(beDragId, block.id);
+  });
+
+  return wrap;
+}
+
+function beBindText(el, block) {
+  el.addEventListener('input', function() {
+    block.content = el.innerHTML;
+    updateWc();
+    scheduleCatDetect();
+  });
+  el.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey && block.type !== 'blockquote') {
+      e.preventDefault();
+      var idx = beBlocks.findIndex(function(b){ return b.id === block.id; });
+      var nb = { id: beGenId(), type: 'paragraph', content: '' };
+      beBlocks.splice(idx + 1, 0, nb);
+      beRender();
+      setTimeout(function() {
+        var ne = document.querySelector('[data-id="' + nb.id + '"] .be-block-inner');
+        if (ne) { ne.focus(); bePlaceCursorEnd(ne); }
+      }, 20);
+    }
+    if (e.key === 'Backspace' && el.textContent === '' && beBlocks.length > 1) {
+      e.preventDefault();
+      var idx = beBlocks.findIndex(function(b){ return b.id === block.id; });
+      beDeleteBlock(block.id);
+      setTimeout(function() {
+        var pi = Math.max(0, idx - 1);
+        if (beBlocks[pi]) {
+          var pe = document.querySelector('[data-id="' + beBlocks[pi].id + '"] .be-block-inner');
+          if (pe && pe.isContentEditable) { pe.focus(); bePlaceCursorEnd(pe); }
+        }
+      }, 20);
+    }
+  });
+}
+
+function bePlaceCursorEnd(el) {
+  var r = document.createRange();
+  r.selectNodeContents(el);
+  r.collapse(false);
+  var s = window.getSelection();
+  s.removeAllRanges();
+  s.addRange(r);
+}
+
+function beDeleteBlock(id) {
+  if (beBlocks.length <= 1) {
+    if (beBlocks[0]) { beBlocks[0].content = ''; }
+    beRender();
+    return;
+  }
+  beBlocks = beBlocks.filter(function(b){ return b.id !== id; });
+  beRender();
+}
+
+function beMoveBlock(fromId, toId) {
+  var fi = beBlocks.findIndex(function(b){ return b.id === fromId; });
+  var ti = beBlocks.findIndex(function(b){ return b.id === toId; });
+  if (fi === -1 || ti === -1) return;
+  var blk = beBlocks.splice(fi, 1)[0];
+  var ni = beBlocks.findIndex(function(b){ return b.id === toId; });
+  beBlocks.splice(ni, 0, blk);
+  beRender();
+}
+
+function beRenderAddRow(afterIdx) {
+  var row = document.createElement('div');
+  row.className = 'be-add-row';
+  row.dataset.after = afterIdx;
+  var l = document.createElement('div'); l.className = 'be-add-line';
+  var r = document.createElement('div'); r.className = 'be-add-line';
+  var btn = document.createElement('button');
+  btn.className = 'be-add-btn';
+  btn.title = 'Add block';
+  btn.textContent = '+';
+  (function(ai){ btn.addEventListener('click', function(e){ e.stopPropagation(); beShowTypePicker(ai, btn); }); })(afterIdx);
+  row.appendChild(l); row.appendChild(btn); row.appendChild(r);
+  return row;
+}
+
+var BE_TYPES = [
+  ['paragraph',  '¶', 'Paragraph',  'Regular body text'],
+  ['heading2',   'H2','Heading',     'Bold section title'],
+  ['heading3',   'H3','Subheading',  'Smaller heading'],
+  ['image',      '🖼','Image',       'Upload or paste URL'],
+  ['blockquote', '"', 'Pull Quote',  'Highlighted quote'],
+  ['divider',    '—', 'Divider',     'Horizontal separator'],
+];
+
+function beShowTypePicker(afterIdx, btn) {
+  var ex = document.getElementById('beTypePicker');
+  if (ex) { var wasAfter = ex.dataset.after; ex.remove(); if (wasAfter == afterIdx) return; }
+
+  var picker = document.createElement('div');
+  picker.id = 'beTypePicker';
+  picker.className = 'be-type-picker';
+  picker.dataset.after = afterIdx;
+
+  BE_TYPES.forEach(function(t) {
+    var b = document.createElement('button');
+    b.className = 'be-picker-btn';
+    b.innerHTML = '<span class="be-picker-icon">' + t[1] + '</span>' +
+      '<span class="be-picker-label"><strong>' + t[2] + '</strong><br><small>' + t[3] + '</small></span>';
+    (function(type, ai){ b.addEventListener('click', function(){ beAddBlock(type, ai); }); })(t[0], afterIdx);
+    picker.appendChild(b);
+  });
+
+  var canvas = document.getElementById('blockEditorCanvas');
+  var cr = canvas.getBoundingClientRect();
+  var br = btn.getBoundingClientRect();
+  picker.style.position = 'absolute';
+  picker.style.left = Math.max(0, (br.left - cr.left)) + 'px';
+  picker.style.top = (br.bottom - cr.top + 6) + 'px';
+  canvas.appendChild(picker);
+
+  setTimeout(function() {
+    function closePicker(e) {
+      if (!picker.contains(e.target) && e.target !== btn) {
+        picker.remove();
+        document.removeEventListener('click', closePicker);
+      }
+    }
+    document.addEventListener('click', closePicker);
+  }, 10);
+}
+
+function beAddBlock(type, afterIdx) {
+  var nb = { id: beGenId(), type: type, content: '', src: '', alt: '', caption: '' };
+  beBlocks.splice(afterIdx, 0, nb);
+  var p = document.getElementById('beTypePicker');
+  if (p) p.remove();
+  beRender();
+  setTimeout(function() {
+    if (type === 'image') {
+      _bimTargetBlockId = nb.id;
+      bimOpen();
+    } else {
+      var el = document.querySelector('[data-id="' + nb.id + '"] .be-block-inner');
+      if (el && el.isContentEditable) { el.focus(); bePlaceCursorEnd(el); }
+    }
+  }, 30);
+}
+
+async function beHandleImgUpload(blockId, file) {
+  var block = beBlocks.find(function(b){ return b.id === blockId; });
+  if (!block) return;
+  try {
+    var url = await uploadMediaFile(file);
+    block.src = url;
+    beRender();
+  } catch(e) { alert('Upload failed: ' + (e.message || e)); }
+}
+
+// Init on first open (DOMContentLoaded wires it)
+function beInitIfEmpty() {
+  if (!beBlocks || beBlocks.length === 0) beInit();
+}
+
+// ═══════════════════════════════════════════════════════════
+// BODY IMAGE MODAL (now serves both block-editor image blocks
+// and inline embeds for blockquote/paragraph via URL)
+// ═══════════════════════════════════════════════════════════
+var _bimFileReady = null;
+
+function bimOpen() {
+  document.getElementById('bodyImgModal').classList.add('open');
+  document.getElementById('bimUrlInput').value = '';
+  document.getElementById('bimPreview').style.display = 'none';
+  document.getElementById('bimInsertUrlBtn').style.display = 'none';
+  document.getElementById('bimFilePreview').style.display = 'none';
+  document.getElementById('bimInsertFileBtn').style.display = 'none';
+  document.getElementById('bimUploadProgress').style.display = 'none';
+  document.getElementById('bimUploadProgressBar').style.width = '0%';
+  _bimFileReady = null;
+  bimSwitchTab('url');
+  setTimeout(function(){ document.getElementById('bimUrlInput').focus(); }, 80);
+}
+
+function bimClose() {
+  document.getElementById('bodyImgModal').classList.remove('open');
+  _bimTargetBlockId = null;
+  _bimFileReady = null;
+}
+
+document.getElementById('bimCloseBtn').addEventListener('click', bimClose);
+document.getElementById('bodyImgModal').addEventListener('click', function(e) {
+  if (e.target === this) bimClose();
 });
-quill.on('text-change', function() { updateWc(); scheduleCatDetect(); });
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && document.getElementById('bodyImgModal').classList.contains('open')) bimClose();
+});
+
+function bimSwitchTab(tab) {
+  document.getElementById('bimTabUrl').classList.toggle('active', tab === 'url');
+  document.getElementById('bimTabFile').classList.toggle('active', tab === 'file');
+  document.getElementById('bimUrlPanel').style.display = tab === 'url' ? '' : 'none';
+  document.getElementById('bimFilePanel').style.display = tab === 'file' ? '' : 'none';
+}
+
+function bimPreviewUrl() {
+  var url = document.getElementById('bimUrlInput').value.trim();
+  if (!url) return;
+  var img = document.getElementById('bimPreviewImg');
+  img.src = url;
+  img.onload = function() {
+    document.getElementById('bimPreview').style.display = 'block';
+    document.getElementById('bimInsertUrlBtn').style.display = 'block';
+  };
+  img.onerror = function() {
+    document.getElementById('bimPreview').style.display = 'none';
+    document.getElementById('bimInsertUrlBtn').style.display = 'none';
+    alert('Could not load image from that URL. Try uploading it instead.');
+  };
+}
+
+document.getElementById('bimUrlInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') { e.preventDefault(); bimPreviewUrl(); }
+});
+
+function bimInsertUrl(url) {
+  if (_bimTargetBlockId) {
+    // Set the URL on the targeted image block
+    var block = beBlocks.find(function(b){ return b.id === _bimTargetBlockId; });
+    if (block) { block.src = url; block.type = 'image'; beRender(); }
+    bimClose();
+  } else {
+    bimClose();
+  }
+}
+
+function bimInsertFromUrl() {
+  var url = document.getElementById('bimUrlInput').value.trim();
+  if (url) bimInsertUrl(url);
+}
+
+document.getElementById('bimFileInput').addEventListener('change', function() {
+  if (this.files && this.files[0]) bimHandleFile(this.files[0]);
+});
+
+var bimDrop = document.getElementById('bimDropZone');
+bimDrop.addEventListener('dragover', function(e){ e.preventDefault(); this.classList.add('drag'); });
+bimDrop.addEventListener('dragleave', function(){ this.classList.remove('drag'); });
+bimDrop.addEventListener('drop', function(e){
+  e.preventDefault(); this.classList.remove('drag');
+  var f = e.dataTransfer.files[0];
+  if (f && f.type.startsWith('image/')) bimHandleFile(f);
+});
+
+function bimHandleFile(file) {
+  if (file.size > 5 * 1024 * 1024) { alert('File exceeds 5MB limit.'); return; }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    document.getElementById('bimFilePreviewImg').src = e.target.result;
+    document.getElementById('bimFilePreview').style.display = 'block';
+    document.getElementById('bimInsertFileBtn').style.display = 'block';
+    _bimFileReady = file;
+  };
+  reader.readAsDataURL(file);
+}
+
+async function bimInsertFromFile() {
+  if (!_bimFileReady) return;
+  var btn = document.getElementById('bimInsertFileBtn');
+  btn.textContent = 'Uploading…';
+  btn.disabled = true;
+  document.getElementById('bimUploadProgress').style.display = 'block';
+  var bar = document.getElementById('bimUploadProgressBar');
+  var prog = 0;
+  var tick = setInterval(function(){ prog = Math.min(prog + 10, 85); bar.style.width = prog + '%'; }, 200);
+  try {
+    var url = await uploadMediaFile(_bimFileReady);
+    clearInterval(tick);
+    bar.style.width = '100%';
+    bimInsertUrl(url);
+  } catch(err) {
+    clearInterval(tick);
+    alert('Upload failed: ' + (err.message || err));
+    btn.textContent = 'Insert Image';
+    btn.disabled = false;
+  }
+}
 
 document.addEventListener('DOMContentLoaded', async () => {
   try { setHeaderDate(); } catch(e) {}
@@ -2669,6 +3220,49 @@ document.addEventListener('DOMContentLoaded', async () => {
   <a class="sf-btn" href="https://t.me/newsdesk360" target="_blank" rel="noopener" title="Telegram" style="background:#229ed9">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
   </a>
+</div>
+
+<!-- ═══ BODY IMAGE INSERT MODAL ═══ -->
+<div id="bodyImgModal" role="dialog" aria-modal="true" aria-labelledby="bimTitle">
+  <div id="bodyImgModalBox">
+    <div class="bim-head">
+      <h3 id="bimTitle">📷 Insert Image into Article</h3>
+      <button class="bim-close" id="bimCloseBtn" aria-label="Close">×</button>
+    </div>
+    <div class="bim-tabs">
+      <div class="bim-tab active" id="bimTabUrl" onclick="bimSwitchTab('url')">🔗 Paste URL</div>
+      <div class="bim-tab" id="bimTabFile" onclick="bimSwitchTab('file')">⬆ Upload File</div>
+    </div>
+    <div class="bim-body">
+      <!-- URL tab -->
+      <div id="bimUrlPanel">
+        <div class="bim-url-row">
+          <input type="url" id="bimUrlInput" placeholder="https://example.com/photo.jpg" autocomplete="off">
+          <button onclick="bimPreviewUrl()">Preview</button>
+        </div>
+        <div id="bimPreview">
+          <img id="bimPreviewImg" src="" alt="preview">
+        </div>
+        <button class="bim-insert-btn" id="bimInsertUrlBtn" onclick="bimInsertFromUrl()">Insert Image</button>
+      </div>
+      <!-- Upload tab -->
+      <div id="bimFilePanel" style="display:none">
+        <div class="bim-upload-zone" id="bimDropZone" onclick="document.getElementById('bimFileInput').click()">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+          <p><strong>Click to browse</strong> or drag & drop</p>
+          <p style="font-size:11px;color:#4b5563;margin-top:4px">JPG, PNG, GIF, WebP — max 5MB</p>
+        </div>
+        <input type="file" id="bimFileInput" accept="image/*" style="display:none">
+        <div id="bimUploadProgress">
+          <div id="bimUploadProgressBar"></div>
+        </div>
+        <div id="bimFilePreview" style="display:none;margin-top:14px;text-align:center">
+          <img id="bimFilePreviewImg" src="" alt="preview" style="max-width:100%;max-height:160px;border-radius:4px;border:1px solid #374151">
+        </div>
+        <button class="bim-insert-btn" id="bimInsertFileBtn" onclick="bimInsertFromFile()">Insert Image</button>
+      </div>
+    </div>
+  </div>
 </div>
 </body>
 </html>
