@@ -1505,7 +1505,7 @@ async function doLogin() {
       err.style.display = 'block';
     }
   } catch(e) {
-    err.textContent = 'Unable to reach server. Please try again.';
+    err.textContent = e.message || 'Unable to reach server. Please try again.';
     err.style.display = 'block';
   }
 }
