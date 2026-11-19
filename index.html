@@ -2333,8 +2333,7 @@ function updateAllCopyrightEmails(email) {
 }
 
 function updateDashStats() {
-  // Stats count only real (non-demo) articles authored in the DB
-  const real = articles.filter(a=>a.id<9000);
+  const real = articles;
   document.getElementById('statTotal').textContent   = real.length;
   document.getElementById('statPub').textContent     = real.filter(a=>a.published).length;
   document.getElementById('statDraft').textContent   = real.filter(a=>!a.published).length;
@@ -2344,8 +2343,7 @@ function updateDashStats() {
 function renderRecentAdminTable() {
   const el = document.getElementById('recentAdminTable');
   if (!el) return;
-  // Show only real DB articles in the recent articles panel
-  const items = articles.filter(a=>a.id<9000).slice(0,8);
+  const items = articles.slice(0,8);
   if (!items.length) { el.innerHTML='<div class="empty-table">No articles yet. <span style="color:var(--crimson);cursor:pointer" onclick="adminTab(\'new\')">Add one →</span></div>'; return; }
   el.innerHTML = items.map(a=>adminRowHtml(a)).join('');
 }
@@ -2353,8 +2351,7 @@ function renderRecentAdminTable() {
 function renderAdminArticlesTable(preserveSearch) {
   const el = document.getElementById('allArticlesTable');
   if (!el) return;
-  // Only show real DB articles in the management panel (demo articles have ID >= 9000)
-  const real = articles.filter(a=>a.id<9000);
+  const real = [...articles];
   const prevQuery = preserveSearch ? (document.getElementById('adminSearchInput')?.value || '') : '';
   if (!real.length) { el.innerHTML='<div class="table-wrap"><div class="empty-table">No articles yet. <span style="color:var(--crimson);cursor:pointer" onclick="adminTab(\'new\')">Add one →</span></div></div>'; return; }
   el.innerHTML = `<div class="table-wrap">
@@ -2379,7 +2376,7 @@ function filterAdminArticles() {
   if (!input || !rowsEl) return;
   const q = input.value.trim().toLowerCase();
   clearBtn && (clearBtn.className = 'admin-search-clear' + (q ? ' visible' : ''));
-  const real = articles.filter(a=>a.id<9000);
+  const real = [...articles];
   const filtered = q ? real.filter(a =>
     (a.title||'').toLowerCase().includes(q) ||
     (a.author||'').toLowerCase().includes(q) ||
