@@ -1,10 +1,9 @@
 <?php
 // ═══════════════════════════════════════════════════════════
 //  The Hermes News — Database Config
-//  Fill in these values from Hostinger hPanel → Databases
 // ═══════════════════════════════════════════════════════════
 
-define('DB_HOST', 'localhost');         // Always localhost on Hostinger shared
+define('DB_HOST', 'localhost');
 define('DB_NAME', 'u458421599_thehermesnews');
 define('DB_USER', 'u458421599_thehermesnews');
 define('DB_PASS', 'Zoroxproxy01');
@@ -12,9 +11,14 @@ define('DB_PASS', 'Zoroxproxy01');
 // ── Site URL (no trailing slash) ──────────────────────────
 define('SITE_URL', 'https://thehermesnews.com');
 
+// ── Fallback admin (works even when DB is unavailable) ────
+// Change ADMIN_PASS_HASH by running: php -r "echo password_hash('newpassword', PASSWORD_DEFAULT);"
+define('ADMIN_USER',      'admin');
+define('ADMIN_PASS_HASH', '$2y$10$s5LClEere2CRUMpRgHTiyO/jBUG9eEmOseI64GEZiX3n588CSHybW'); // hermes2026
+
 // ── Upload limits ─────────────────────────────────────────
-define('MAX_IMAGE_MB', 10);   // Max image upload size in MB
-define('MAX_VIDEO_MB', 100);  // Max video upload size in MB
+define('MAX_IMAGE_MB', 10);
+define('MAX_VIDEO_MB', 100);
 
 // ── Allowed file types ────────────────────────────────────
 define('ALLOWED_IMAGE_TYPES', ['image/jpeg','image/png','image/webp','image/gif']);
@@ -46,7 +50,6 @@ function getDB(): ?PDO {
 }
 
 function requireAuth(): void {
-    // Guard against double session_start() — articles.php already calls it at the top
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }

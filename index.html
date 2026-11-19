@@ -1420,8 +1420,7 @@ async function doLogin() {
       err.style.display = 'block';
     }
   } catch(e) {
-    // Backend not available (artifact preview) — show credential hint
-    err.textContent = 'Use admin / admin for demo preview';
+    err.textContent = 'Unable to reach server. Please try again.';
     err.style.display = 'block';
   }
 }
@@ -1939,12 +1938,22 @@ function _cardVidErr(el) {
   wrap.replaceWith(ph);
 }
 
+function _cardImgErr(el, cat, title) {
+  el.style.display = 'none';
+  var p = el.parentElement;
+  if (!p || p.querySelector('.card-img-text')) return;
+  var d = document.createElement('div');
+  d.className = 'card-img-text';
+  d.innerHTML = '<div class="cit-cat">'+esc(cat)+'</div><div class="cit-title">'+esc(title)+'</div>';
+  p.appendChild(d);
+}
+
 function cardHtml(a) {
   var imgText = '<div class="card-img-text"><div class="cit-cat">'+esc(a.cat)+'</div><div class="cit-title">'+esc(a.title)+'</div></div>';
   var imgPart = a.img && isVideo(a.img)
     ? '<div class="card-vid-wrap"><video src="'+esc(a.img)+'" preload="metadata" muted playsinline onloadedmetadata="this.currentTime=1" onerror="_cardVidErr(this)"></video></div>'
     : a.img
-      ? '<img src="'+esc(a.img)+'" alt="'+esc(a.title)+'" loading="lazy" onerror="this.hidden=true"/>'
+      ? '<img src="'+esc(a.img)+'" alt="'+esc(a.title)+'" loading="lazy" onerror="_cardImgErr(this,\''+esc(a.cat).replace(/'/g,"\\'")+'\',\''+esc(a.title).replace(/'/g,"\\'")+'\')"/>'
       : imgText;
   var tags = (a.tags||[]).slice(0,3).map(function(t){return '<span class="tag-pill" data-tag="'+esc(t)+'" onclick="event.stopPropagation();openTagSearch(this.dataset.tag)">'+esc(t)+'</span>';}).join('');
   var breaking = a.breaking ? '<span class="breaking-badge" style="margin-bottom:6px;display:inline-flex"><span class="breaking-dot"></span>Breaking</span>' : '';

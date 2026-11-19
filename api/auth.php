@@ -29,15 +29,35 @@ if ($method === 'POST' && $action === 'login') {
         exit;
     }
 
-    $db   = getDB();
-    $stmt = $db->prepare('SELECT id, username, password FROM users WHERE username = ? LIMIT 1');
-    $stmt->execute([$username]);
-    $user = $stmt->fetch();
+    $authenticated = false;
+    $authedUser    = '';
 
-    if ($user && password_verify($password, $user['password'])) {
-        $_SESSION['user']    = $user['username'];
-        $_SESSION['user_id'] = $user['id'];
-        echo json_encode(['success' => true, 'user' => $user['username']]);
+    // 1. Try database first
+    $db = getDB();
+    if ($db !== null) {
+        try {
+            $stmt = $db->prepare('SELECT id, username, password FROM users WHERE username = ? LIMIT 1');
+            $stmt->execute([$username]);
+            $row = $stmt->fetch();
+            if ($row && password_verify($password, $row['password'])) {
+                $authenticated = true;
+                $authedUser    = $row['username'];
+                $_SESSION['user_id'] = $row['id'];
+            }
+        } catch (\Exception $e) { /* fall through to config fallback */ }
+    }
+
+    // 2. Fallback: hardcoded admin from config (works even if DB is down)
+    if (!$authenticated && defined('ADMIN_USER') && defined('ADMIN_PASS_HASH')) {
+        if ($username === ADMIN_USER && password_verify($password, ADMIN_PASS_HASH)) {
+            $authenticated = true;
+            $authedUser    = ADMIN_USER;
+        }
+    }
+
+    if ($authenticated) {
+        $_SESSION['user'] = $authedUser;
+        echo json_encode(['success' => true, 'user' => $authedUser]);
     } else {
         http_response_code(401);
         echo json_encode(['error' => 'Invalid username or password']);
