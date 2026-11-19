@@ -1945,7 +1945,7 @@ function renderHero(pub) {
     hero.style.cursor='default'; return;
   }
   hero.style.cursor='pointer';
-  empty.style.display='none';
+  if (empty) empty.style.display='none';
   if (feat.img && !isVideo(feat.img)) { img.src=feat.img; img.style.display=''; img.alt=feat.title; }
   else { img.style.display='none'; }
   content.innerHTML = `
